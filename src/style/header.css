@@ -1,3 +1,16 @@
 .headerDiv {
   height: 40px;
 }
+
+.mainBody {
+  height: 800px;
+}
+
+.rgbCounter {
+  background: black;
+  color: white;
+  font-weight: 900;
+  width: 25%;
+  height: 40px;
+  font-size: 1.2em;
+}
