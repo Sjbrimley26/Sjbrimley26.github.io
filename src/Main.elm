@@ -144,11 +144,11 @@ backgroundModelChange : Model -> Model
 backgroundModelChange model =
   let
     rDirection =
-      if model.background.r.value + 10 >= 120 then Negative
+      if model.background.r.value + 10 >= 255 then Negative
         else if model.background.r.value - 10 < 0 then Positive
         else model.background.r.direction
     gDirection = 
-      if model.background.g.value + 10 >= 175 then Negative
+      if model.background.g.value + 10 >= 255 then Negative
         else if model.background.g.value - 10 < 0 then Positive
         else model.background.g.direction
     bDirection =
