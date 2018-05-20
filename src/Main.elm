@@ -22,27 +22,25 @@ type alias Background =
   , b: { value: Int, direction: Sign}
   }
 
-colorRange = Random.int 0 255
-
 background : Background
 background =
   let 
-    randomR = step (Random.int 0 100) (Random.initialSeed 16)
-    randomG = step (Random.int 0 175) (Random.initialSeed 12)
-    randomB = step colorRange (Random.initialSeed 11)
+    randomR = Tuple.first (step (Random.int 0 100) (Random.initialSeed 16))
+    randomG = Tuple.first (step (Random.int 0 175) (Random.initialSeed 12))
+    randomB = Tuple.first (step (Random.int 0 255) (Random.initialSeed 11))
     rBool = Tuple.first (step Random.bool (Random.initialSeed 15))
     gBool = Tuple.first (step Random.bool (Random.initialSeed 1))
     bBool = Tuple.first (step Random.bool (Random.initialSeed 10))
   in
-    { r = { value = Tuple.first randomR
+    { r = { value = randomR
           , direction =
               if rBool then Positive else Negative
           }
-    , g = { value = Tuple.first randomG
+    , g = { value = randomG
           , direction =
               if gBool then Positive else Negative
           }
-    , b = { value = Tuple.first randomB
+    , b = { value = randomB
           , direction =
               if bBool then Positive else Negative
           }
@@ -65,7 +63,8 @@ model =
 
 type Msg =
   ChangeBackground
-  | UpdateTime Time
+  | UpdateTime
+  | SetTime Time
 
 init : ( Model, Cmd Msg )
 init = 
@@ -76,19 +75,54 @@ update msg model =
   case msg of
     ChangeBackground ->
       (backgroundModelChange model, Cmd.none)
-    UpdateTime time ->
-      ({ model | currentTime = time }, Cmd.none)
+    UpdateTime ->
+      (model, Task.perform SetTime now)
+    SetTime time ->
+      ({model | currentTime = time}, Cmd.none)
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    Sub.batch [ every (160 * millisecond) backgroundShift
-              , every (160 * millisecond) timeTicker
+    Sub.batch [ every (50 * millisecond) backgroundShift
+              , every (50 * millisecond) updateTime
               ]
 
 view : Model -> Html Msg
 view model =
-  div [ getRGB model, class "mainBody" ]
-    [ div [ class "headerDiv" ] [] 
+  div [ class "mainBody" ]
+    [ div [ class "headerDiv"
+          , getRGB 
+              { model | background = 
+                { background | 
+                    r = { value = model.background.b.value
+                        , direction = model.background.b.direction
+                        },
+                    g = { value = model.background.r.value
+                        , direction = model.background.r.direction 
+                        },
+                    b = { value = model.background.g.value
+                        , direction = model.background.g.direction
+                        }
+                }
+              } 
+          ] []
+    , div [ class "headerDiv"
+          , getRGB 
+              { model | background = 
+                { background | 
+                    r = { value = model.background.g.value
+                        , direction = model.background.g.direction
+                        },
+                    g = { value = model.background.b.value
+                        , direction = model.background.b.direction 
+                        },
+                    b = { value = model.background.r.value
+                        , direction = model.background.r.direction
+                        }
+                }
+              } 
+          ] []
+    , div [ class "headerDiv", getRGB model ] []
+    {-
     , div [ flex, justify_center ] 
         [ div [ class "rgbCounter" ]
             [ text ("rgb(" 
@@ -99,6 +133,7 @@ view model =
         , div [ class "rgbCounter" ]
             [ text ( toString ( inMilliseconds model.currentTime ) ) ]
         ]
+    -}
     ]
 
 backgroundShift : Time -> Msg
@@ -110,16 +145,19 @@ backgroundModelChange model =
   let
     rDirection =
       if model.background.r.value + 10 >= 120 then Negative
-        else if model.background.r.value - 5 < 0 then Positive
+        else if model.background.r.value - 10 < 0 then Positive
         else model.background.r.direction
     gDirection = 
       if model.background.g.value + 10 >= 175 then Negative
-        else if model.background.g.value - 8 < 0 then Positive
+        else if model.background.g.value - 10 < 0 then Positive
         else model.background.g.direction
     bDirection =
       if model.background.b.value + 10 >= 255 then Negative
-        else if model.background.b.value - 16 < 0 then Positive
-        else model.background.b.direction 
+        else if model.background.b.value - 10 < 0 then Positive
+        else model.background.b.direction
+
+    generateRandomInt min max =
+      Tuple.first (step (Random.int min max) (Random.initialSeed (truncate (inMilliseconds model.currentTime))))
   
   in
     { model |
@@ -127,25 +165,25 @@ backgroundModelChange model =
             r = { value =
                     case rDirection of
                       Positive ->
-                        model.background.r.value + 3
+                        model.background.r.value + ( generateRandomInt 1 3 )
                       Negative ->
-                        model.background.r.value - 3
+                        model.background.r.value - ( generateRandomInt 1 3 )
                 , direction = rDirection
-                }
-            ,g = { value =
+                },
+            g = { value =
                       case gDirection of
                         Positive ->
-                          model.background.g.value + 8
+                          model.background.g.value + ( generateRandomInt 4 6 )
                         Negative ->
-                          model.background.g.value - 8
+                          model.background.g.value - ( generateRandomInt 4 6 )
                   , direction = gDirection
-                  }
-            ,b = { value =
+                  },
+            b = { value =
                       case bDirection of
                         Positive ->
-                          model.background.b.value + 16
+                          model.background.b.value + ( generateRandomInt 7 10 )
                         Negative ->
-                          model.background.b.value - 16
+                          model.background.b.value - ( generateRandomInt 7 10 )
                   , direction = bDirection
                   }
             }
@@ -165,8 +203,4 @@ getRGB model =
 
 updateTime : Time -> Msg
 updateTime time =
-  UpdateTime time
-
-timeTicker : Time -> Msg
-timeTicker time =
-  (Task.perform updateTime now)
+  UpdateTime
