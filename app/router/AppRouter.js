@@ -11,7 +11,7 @@ const AppRouter = () => {
         <Header/>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/2" exact component={Fake} />
+          <Route path="/#/2" exact component={Fake} />
         </Switch>
       </div>
     </BrowserRouter>
