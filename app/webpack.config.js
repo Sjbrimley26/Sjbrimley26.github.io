@@ -39,7 +39,8 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: "./src/index.html",
+      favicon: "./assets/images/favicon.ico"
     }),
     new ManifestPlugin({
       fileName: "asset-manifest.json"
