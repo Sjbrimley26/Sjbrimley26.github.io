@@ -1,5 +1,131 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display');
+
 body, html {
   margin: 0;
   height: 100%;
   width: 100%;
+  background: linear-gradient(
+    160deg, 
+  rgb(11, 28, 40),
+  rgb(20, 54, 77),
+  rgb(44, 94, 128),
+  rgb(62, 130, 175)
+    );
+  color: white;
+  font-family: 'Playfair Display', serif;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+.fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
+.mainColumn {
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  width: 300px;
+  background: rgba(255, 255, 255, 0.3);
+  height: 100%;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: space-around;
+  animation-name: fade_in;
+  animation-duration: 1000ms;
+  animation-timing-function: ease-in;
+
+  h1 {
+    margin-top: 200px;
+
+    animation-name: fade_in;
+    animation-duration: 1600ms;
+    animation-timing-function: ease-in;
+  }
+
+  button {
+    margin: 20px;
+    display: block;
+    padding: 20px;
+    border-radius: 15%;
+    min-width: 50%;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3em;
+    background: rgba(181, 218, 252, 0.7);
+
+    @for $i from 1 through 3 {
+      &:nth-child(#{$i}) {
+        animation-name: slide_in;
+        animation-duration: 1350ms + $i * 150ms;
+        animation-timing-function: ease-in-out;
+      }
+    }
+  }
+
+  @media (min-width: 600px) {
+    width: 50%;
+  }
+
+  @media (min-width: 1200px) {
+
+  }
+}
+
+@keyframes fade_in {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@keyframes slide_in {
+  0% {
+    display: none;
+    opacity: 0;
+    transform: translateX(80px);
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+    transform: translateX(80px);
+  }
+
+  50% {
+    opacity: 0;
+    transform: translateX(80px);
+  }
+
+  70% {
+    transform: rotateZ(-2deg) translateX(-10px);
+  }
+
+  90% {
+    transform: translateX(-30px);
+    transform: rotateZ(-10deg);
+  }
+
+  98% {
+    transform: translateX(10px);
+    transform: rotateZ(5deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0px);
+  }
 }

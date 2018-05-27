@@ -7,9 +7,10 @@ class Home extends Component {
 
   render() {
     return (
-      <div>
+      <div className="mainColumn">
         <h1>Welcome!</h1>
-        <p>What a great day to be alive</p>
+        <button className="link">About</button>
+        <button className="link">About</button>
       </div>
     );
   }
