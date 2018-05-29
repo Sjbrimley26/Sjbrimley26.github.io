@@ -2,5 +2,7 @@
   "main.js": "./bundle.js",
   "ww.jpg": "./7d837f817f3c2c3b9c2178b68d71bee4.jpg",
   "favicon.ico": "./favicon.ico",
-  "index.html": "./index.html"
+  "index.html": "./index.html",
+  "manifest.json": "./manifest.json",
+  "logo.png": "./logo.png"
 }
