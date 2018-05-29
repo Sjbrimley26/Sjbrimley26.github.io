@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 
 module.exports = {
@@ -54,7 +55,6 @@ module.exports = {
       filename: 'service-worker.js',
       logger(message) {
         if (message.indexOf('Total precache size is') === 0) {
-          // This message occurs for every build and is a bit too noisy.
           return;
         }
         console.log(message);
@@ -62,6 +62,9 @@ module.exports = {
       minify: true,
       navigateFallback: '/index.html',
       staticFileGlobsIgnorePatterns: [/\.map$/, /asset-manifest\.json$/]
-    })
+    }),
+    new CopyWebpackPlugin([{
+      from: 'src/pwa'
+    }])
   ]
 };
