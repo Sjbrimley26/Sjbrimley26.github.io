@@ -9,7 +9,10 @@ const AppRouter = () => {
       <div className="fullscreen">
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/2" exact component={Fake} />
+          <Route path="/about" exact component={Fake} />
+          <Route path="/portfolio" exact component={Fake} />
+          <Route path="/contact" exact component={Fake} />
+          <Route path="/survey" exact component={Fake} />
         </Switch>
       </div>
     </HashRouter>
