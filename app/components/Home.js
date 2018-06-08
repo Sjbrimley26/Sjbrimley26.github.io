@@ -15,7 +15,7 @@ class Home extends Component {
       <div className="mainColumn">
       <div className="background"/>
         <div className="bigS">S</div>
-        <h1>Welcome!</h1>
+        <div className="bumper"/>
         <button onClick={this.navTo.bind(null, "/about")} className="link">About</button>
         <button onClick={this.navTo.bind(null, "/portfolio")}  className="link">Portfolio</button>
         <button onClick={this.navTo.bind(null, "/contact")}  className="link">Contact</button>
@@ -25,4 +25,4 @@ class Home extends Component {
   }
 }
 
-export default  withRouter(Home);
+export default withRouter(Home);

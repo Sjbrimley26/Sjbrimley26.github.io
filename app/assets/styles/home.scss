@@ -17,11 +17,18 @@ $numOfLinks: 7; // actual number of links + 3
   position: fixed;
   left: 50%;
   transform: translateX(-50%);
-  top: -25%;
-  font-size: 60em;
+  top: -3%;
+  height: 100%;
+  font-size: 40em;
   z-index: 1;
+  mix-blend-mode: hue;
   color: rgba(200, 225, 255, 0.2);
   background: linear-gradient( 160deg, rgba(11, 28, 40, 0.7), rgba(20, 54, 77, 0.5), rgba(44, 94, 128, 0.3), rgba(62, 130, 175, 0.1));
+
+  @media (min-width: 480px) {
+    top: -25%;
+    font-size: 60em;
+  }
 }
 
 .mainColumn {
@@ -42,14 +49,25 @@ $numOfLinks: 7; // actual number of links + 3
     animation-duration: 500ms;
     animation-timing-function: ease-in;
   }
+
+  .bumper {
+    position: relative;
+    width: 100%;
+    height: 33%;
+
+    @media (min-width: 560px) {
+      height: 28%;
+    }
+  }
+
   .link {
     margin: 20px;
     display: block;
-    padding: 20px;
+    padding: 10px 0;
     border-radius: 15%;
     width: 50%;
     font-family: 'Playfair Display', serif;
-    font-size: 1.1em;
+    font-size: 0.8em;
     background: rgba(10, 25, 39, 0.6);
     border: hidden;
     text-shadow: 0 0 20px black;
@@ -69,6 +87,11 @@ $numOfLinks: 7; // actual number of links + 3
         animation-duration: 500ms + $i * 150ms;
         animation-timing-function: ease-in-out;
       }
+    }
+
+    @media (min-width: 560px) {
+      font-size: 1.1em;
+      padding: 20px;
     }
 
     
