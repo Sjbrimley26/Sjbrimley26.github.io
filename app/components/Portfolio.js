@@ -71,7 +71,17 @@ const renderProjects = context => {
         {
           project.url ? (
             <div>
-              <a href={project.url} target="blank">Visit the Site!</a>
+                {
+                  project.url.indexOf("codepen") > 0 ? (
+                    <a href={project.url} target="blank">
+                      Visit the CodePen!
+                    </a>
+                  ) : (
+                    <a href={project.url} target="blank">
+                      Visit the Site!
+                    </a>
+                  )
+                }
             </div>
           ) : null
         }
@@ -119,7 +129,8 @@ const renderProjects = context => {
         direction: "left",
         seed: Date.now()
       });
-    } else {
+    } 
+    else {
       context.setState({
         active_project_index: active_project_index - 1,
         direction: "left",
@@ -129,8 +140,18 @@ const renderProjects = context => {
   }
       
   return [
-    (<button key={seed} onClick={cycleLeft} className="cycle cycle--left fadeIn"/>),
-    (<button key={seed + 10} onClick={cycleRight} className="cycle cycle--right fadeIn"/>),
+    <button 
+      key={seed}
+      onClick={cycleLeft}
+      aria-label="cycle left"
+      className="cycle cycle--left fadeIn"
+    />,
+    <button 
+      key={seed + 10}
+      onClick={cycleRight}
+      aria-label="cycle right"
+      className="cycle cycle--right fadeIn"
+    />,
     create_project_div(projects[active_project_index], "center", direction, seed),
     create_project_div(projects[leftIndex], "left", direction, seed),
     create_project_div(projects[rightIndex], "right", direction, seed)
@@ -144,45 +165,51 @@ const removeAnimationClasses = () => {
     );
   };
 
-  const wrapArr = createArrayFromClass("projectWrapper");
-  const bArr = createArrayFromClass("cycle");
-  const pArr = createArrayFromClass("project");
-  const iArr = bArr.concat(pArr, wrapArr);
-  iArr.forEach(item => {
-    const {
-      className: name
-    } = item;
-    const index = 
-      name.lastIndexOf(" ") > -1 ?
-      name.lastIndexOf(" ") :
-      500;
-    item.className = name.slice(0, index);
-  })
+  [
+    createArrayFromClass("projectWrapper"),
+    createArrayFromClass("cycle"),
+    createArrayFromClass("project")
+  ].reduce((result = [], arr) => {
+      arr.forEach(item => result.push(item))
+      return result;
+    }
+  ).forEach(item => {
+      const {
+        className: name
+      } = item;
+      const sIndex = name.lastIndexOf(" ");
+      const index =
+        sIndex > -1 ?
+        sIndex :
+        500;
+      item.className = name.slice(0, index);
+  });
 };
 
 class Portfolio extends Component {
   constructor(props) {
-    
-    const project = (title, url, gitUrl) => {
-      const project_images = {
-        "E-Juice DB": juiceImage,
-        "Pinterest Clone": pinterestImage,
-        "Fair Rentals": rentalImage,
-        "Google Sheets CRUD": sheetsImage,
-        "Shop.DoorManStan": doorImage,
-        "Tic Tac Toe": toeImage,
-        "Weather App": weatherImage,
-        "Wiki App": wikiImage
-      };
+    super(props);
 
+    const project_images = {
+      "E-Juice DB": juiceImage,
+      "Pinterest Clone": pinterestImage,
+      "Fair Rentals": rentalImage,
+      "Google Sheets CRUD": sheetsImage,
+      "Shop.DoorManStan": doorImage,
+      "Tic Tac Toe": toeImage,
+      "Weather App": weatherImage,
+      "Wiki App": wikiImage
+    };
+
+    const project = (title, url, gitUrl) => {
       return { 
         title,
         url,
         gitUrl,
         image : project_images[title]
       };
-    }
-    super(props);
+    };
+
     this.state = {
       active_project_index: 0,
       direction: undefined,
@@ -251,8 +278,10 @@ class Portfolio extends Component {
         onClick={this.navTo.bind(this, "/")}
         key={this.state.seed}
       >
+      <main>
         { renderProjects(this) }
         { setTimeout(removeAnimationClasses, 100) }
+      </main>
       </div>
     );
   }
