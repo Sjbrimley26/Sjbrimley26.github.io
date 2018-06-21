@@ -100,14 +100,6 @@
   overflow: hidden;
   transition: all 300ms;
   color: transparent;
-
-  &.spin--right {
-    transform: rotateY(-10deg);
-  }
-
-  &.spin--left {
-    transform: rotateY(10deg);
-  }
 }
 
 .project_img_div {
@@ -138,15 +130,18 @@
 
 .cycle {
   position: absolute;
-  top: 50%;
-  width: 0;
-  height: 0;
-  border-top: 40px solid transparent;
-  border-bottom: 40px solid transparent;
+  top: 60%;
+  width: 35px;
+  height: 35px;
   z-index: 10;
   background: transparent;
   padding: 0;
   transition: all 500ms;
+  transform-origin: center;
+
+  &:active, &:focus {
+    outline: none;
+  }
 
   &.fadeIn {
     opacity: 0;
@@ -154,30 +149,29 @@
   }
 
   &--left {
-    border-right: 40px solid rgba(128, 128, 128, 1);
-    left: 50%;
-    transform: translateX(-150px);
+    border-top: 5px solid white;
+    border-left: 5px solid white;
+    border-bottom: none;
+    border-right: none;
+    transform: rotateZ(-45deg);
+    left: 5%;
 
     @media (min-width: 340px) {
-      transform: translateX(-170px);
+      left: calc(5% + 25px);
     }
 
-    &:hover {
-      border-right: 40px solid rgba(74, 20, 95, 0.8);
-    }
   }
 
   &--right {
-    border-left: 40px solid rgba(128, 128, 128, 1);
-    left: 50%;
-    transform: translateX(110px);
+    border-top: 5px solid white;
+    border-right: 5px solid white;
+    border-bottom: none;
+    border-left: none;
+    transform: rotateZ(45deg);
+    left: calc(95% - 35px);
 
     @media (min-width: 340px) {
-      transform: translateX(130px);
+      left: calc(95% - 50px);
     }
-
-    &:hover {
-      border-left: 40px solid rgba(75, 205, 220, 0.8);
-    }
-  }
+  } 
 }

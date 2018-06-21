@@ -10,6 +10,102 @@ import toeImage from "../assets/images/tic_tac_toe.jpg";
 import weatherImage from "../assets/images/weather_app.jpg";
 import wikiImage from "../assets/images/wiki_app.jpg";
 
+class Portfolio extends Component {
+  constructor(props) {
+    super(props);
+    this.state = setInitialState();
+  }
+
+  navTo = (url) => {
+    return this.props.history.push(url);
+  }
+
+  render () {
+    return (
+      <div
+        className="projectWrapper"
+        onClick={this.navTo.bind(this, "/")}
+        key={this.state.seed}
+      >
+      <main>
+        { renderProjects(this) }
+        { setTimeout(removeAnimationClasses, 100) }
+      </main>
+      </div>
+    );
+  }
+}
+
+const setInitialState = () => {
+  const project_images = {
+    "E-Juice DB": juiceImage,
+    "Pinterest Clone": pinterestImage,
+    "Fair Rentals": rentalImage,
+    "Google Sheets CRUD": sheetsImage,
+    "DoorManStan": doorImage,
+    "Tic Tac Toe": toeImage,
+    "Weather App": weatherImage,
+    "Wiki App": wikiImage
+  };
+
+  const project = (title, url, gitUrl) => {
+    return {
+      title,
+      url,
+      gitUrl,
+      image: project_images[title]
+    };
+  };
+
+  return {
+    active_project_index: 0,
+    direction: undefined,
+    seed: 0,
+    projects: [
+      project(
+        "Pinterest Clone",
+        "https://elated-laborer.glitch.me/",
+        "https://github.com/chingu-voyage4/Bears-Team-26"
+      ),
+      project(
+        "Fair Rentals",
+        "https://fair-rentals.herokuapp.com/",
+        "https://github.com/chingu-voyage3/fair-rentals"
+      ),
+      project(
+        "DoorManStan",
+        "https://shop.doormanstan.com/mouldings",
+        undefined
+      ),
+      project(
+        "Google Sheets CRUD",
+        undefined,
+        "https://github.com/Sjbrimley26/sheets-crud"
+      ),
+      project(
+        "E-Juice DB",
+        undefined,
+        "https://github.com/Sjbrimley26/ejuices"
+      ),
+      project(
+        "Tic Tac Toe",
+        "https://codepen.io/sjbrimley26/pen/yoGeem",
+        undefined
+      ),
+      project(
+        "Weather App",
+        'https://codepen.io/sjbrimley26/pen/LjmZdq',
+        undefined
+      ),
+      project(
+        "Wiki App",
+        "https://codepen.io/sjbrimley26/pen/LjmMgp",
+        undefined
+      )
+    ]
+  };
+};
+
 const renderProjects = context => {
 
   const {
@@ -21,13 +117,13 @@ const renderProjects = context => {
 
   const rightIndex =
     active_project_index + 1 > projects.length - 1 ?
-    0 :
-    active_project_index + 1;
+      0 :
+      active_project_index + 1;
 
   const leftIndex =
     active_project_index - 1 < 0 ?
-    projects.length - 1 :
-    active_project_index - 1;
+      projects.length - 1 :
+      active_project_index - 1;
 
   const create_project_div = (project, opt, direction, seed) => {
     let projectClass = "project";
@@ -47,15 +143,15 @@ const renderProjects = context => {
     }
 
     return (
-      <div 
-        key={Math.random()} 
-        className={projectClass} 
+      <div
+        key={Math.random()}
+        className={projectClass}
         onClick={e => e.stopPropagation()}
       >
-        <div 
+        <div
           key={seed + Math.random() * 10}
           className="project_img_div"
-          style={{ 
+          style={{
             backgroundImage: `url(${project.image})`,
             backgroundPosition: "center",
             backgroundSize: "cover",
@@ -64,24 +160,24 @@ const renderProjects = context => {
         >
           <div className="title">
             <p>
-              { project.title }
+              {project.title}
             </p>
           </div>
         </div>
         {
           project.url ? (
             <div>
-                {
-                  project.url.indexOf("codepen") > 0 ? (
-                    <a href={project.url} target="blank">
-                      Visit the CodePen!
+              {
+                project.url.indexOf("codepen") > 0 ? (
+                  <a href={project.url} target="blank">
+                    Visit the CodePen!
                     </a>
-                  ) : (
+                ) : (
                     <a href={project.url} target="blank">
                       Visit the Site!
                     </a>
                   )
-                }
+              }
             </div>
           ) : null
         }
@@ -105,7 +201,7 @@ const renderProjects = context => {
 
   const cycleRight = e => {
     e.stopPropagation();
-    if (active_project_index + 1 > projects.length - 1 ) {
+    if (active_project_index + 1 > projects.length - 1) {
       context.setState({
         active_project_index: 0,
         direction: "right",
@@ -129,7 +225,7 @@ const renderProjects = context => {
         direction: "left",
         seed: Date.now()
       });
-    } 
+    }
     else {
       context.setState({
         active_project_index: active_project_index - 1,
@@ -138,15 +234,15 @@ const renderProjects = context => {
       });
     }
   }
-      
+
   return [
-    <button 
+    <button
       key={seed}
       onClick={cycleLeft}
       aria-label="cycle left"
       className="cycle cycle--left fadeIn"
     />,
-    <button 
+    <button
       key={seed + 10}
       onClick={cycleRight}
       aria-label="cycle right"
@@ -157,6 +253,10 @@ const renderProjects = context => {
     create_project_div(projects[rightIndex], "right", direction, seed)
   ];
 };
+
+/*
+  This hinges on the animation class being the last one in the classList
+*/
 
 const removeAnimationClasses = () => {
   const createArrayFromClass = className => {
@@ -170,121 +270,20 @@ const removeAnimationClasses = () => {
     createArrayFromClass("cycle"),
     createArrayFromClass("project")
   ].reduce((result = [], arr) => {
-      arr.forEach(item => result.push(item))
-      return result;
-    }
+    arr.forEach(item => result.push(item))
+    return result;
+  }
   ).forEach(item => {
-      const {
-        className: name
-      } = item;
-      const sIndex = name.lastIndexOf(" ");
-      const index =
-        sIndex > -1 ?
+    const {
+      className: name
+    } = item;
+    const sIndex = name.lastIndexOf(" ");
+    const index =
+      sIndex > -1 ?
         sIndex :
         500;
-      item.className = name.slice(0, index);
+    item.className = name.slice(0, index);
   });
 };
-
-class Portfolio extends Component {
-  constructor(props) {
-    super(props);
-
-    const project_images = {
-      "E-Juice DB": juiceImage,
-      "Pinterest Clone": pinterestImage,
-      "Fair Rentals": rentalImage,
-      "Google Sheets CRUD": sheetsImage,
-      "Shop.DoorManStan": doorImage,
-      "Tic Tac Toe": toeImage,
-      "Weather App": weatherImage,
-      "Wiki App": wikiImage
-    };
-
-    const project = (title, url, gitUrl) => {
-      return { 
-        title,
-        url,
-        gitUrl,
-        image : project_images[title]
-      };
-    };
-
-    this.state = {
-      active_project_index: 0,
-      direction: undefined,
-      seed: 0,
-      projects: [
-        project(
-          "Pinterest Clone",
-          "https://elated-laborer.glitch.me/",
-          "https://github.com/chingu-voyage4/Bears-Team-26"
-        ),
-        project(
-          "Fair Rentals",
-          "https://fair-rentals.herokuapp.com/",
-          "https://github.com/chingu-voyage3/fair-rentals"
-        ),
-        project(
-          "Shop.DoorManStan",
-          "https://shop.doormanstan.com/mouldings",
-          undefined
-        ),
-        project(
-          "Google Sheets CRUD",
-          undefined,
-          "https://github.com/Sjbrimley26/sheets-crud"
-        ),
-        project(
-          "E-Juice DB",
-          undefined,
-          "https://github.com/Sjbrimley26/ejuices"
-        ),
-        project(
-          "Tic Tac Toe",
-          "https://codepen.io/sjbrimley26/pen/yoGeem",
-          undefined
-        ),
-        project(
-          "Weather App",
-          'https://codepen.io/sjbrimley26/pen/LjmZdq',
-          undefined
-        ),
-        project(
-          "Wiki App",
-          "https://codepen.io/sjbrimley26/pen/LjmMgp",
-          undefined
-        )
-      ]
-    };
-  }
-
-  navTo = (url) => {
-    return this.props.history.push(url);
-  }
-
-  render () {
-    let wrapperClass = "projectWrapper";
-    if (this.state.direction) {
-      wrapperClass +=
-        this.state.direction === "right" ?
-          " spin--right" :
-          " spin--left";
-    }
-
-    return (
-      <div
-        className={ wrapperClass }
-        onClick={this.navTo.bind(this, "/")}
-        key={this.state.seed}
-      >
-      <main>
-        { renderProjects(this) }
-        { setTimeout(removeAnimationClasses, 100) }
-      </main>
-      </div>
-    );
-  }
-}
 
 export default withRouter(Portfolio);

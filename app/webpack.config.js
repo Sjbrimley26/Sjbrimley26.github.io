@@ -6,7 +6,7 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 
 module.exports = {
-  entry: ["babel-polyfill", "./src/app.js"],
+  entry: "./src/app.js",
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
@@ -44,7 +44,7 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html",
+      template: "!!prerender-loader?string!./src/index.html",
       favicon: "./assets/images/favicon.ico"
     }),
     new ManifestPlugin({
