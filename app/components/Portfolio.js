@@ -29,7 +29,7 @@ class Portfolio extends Component {
       >
       <main>
         { renderProjects(this) }
-        { setTimeout(removeAnimationClasses, 100) }
+        { setTimeout(removeAnimationClasses, 50) }
       </main>
       </div>
     );

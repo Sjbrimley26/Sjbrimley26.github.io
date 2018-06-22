@@ -266,12 +266,11 @@ body, html {
   width: 300px;
   height: 100vh;
   background: #0d50ff;
-  left: 50%;
-  transform: translateX(-50%);
+  left: calc(50% - 162px);
   border: 16px solid #0d50ff;
   box-shadow: 0 0 20px white;
   border-radius: 15px;
-  transition: all 400ms ease-in-out;
+  transition: all 500ms ease-in-out;
   opacity: 1;
   visibility: visible;
   z-index: 5; }
@@ -301,24 +300,28 @@ body, html {
   .project.spin--right, .project.spin--left {
     filter: blur(0.5px); }
   .project.spin--right {
-    transform: rotateY(-65deg) translate(55%); }
+    transform: translate(68%) rotateY(65deg) scale(0.93); }
   .project.spin--left {
-    transform: rotateY(65deg) translate(-292%); }
+    transform: translate(-68%) rotateY(-65deg) scale(0.93); }
   .project--inactive-right {
-    transform: rotateY(-65deg) translate(55%);
-    z-index: 4; }
+    z-index: 4;
+    transform: rotateY(65deg) translate(55%);
+    left: calc(50% + 5px); }
     .project--inactive-right.spin--right {
-      transform: rotateY(-130deg) translate(55%); }
+      transform: rotateY(130deg) translate(55%) scale(0.8);
+      z-index: 3; }
     .project--inactive-right.spin--left {
-      transform: rotateY(0deg) translate(-50%); }
+      transform: none;
+      left: calc(50% - 162px); }
   .project--inactive-left {
-    transform: rotateY(65deg) translate(-292%);
-    z-index: 4; }
+    z-index: 4;
+    transform: rotateY(-65deg) translateX(-55%);
+    left: calc(50% - 330px); }
     .project--inactive-left.spin--right {
-      z-index: 6;
-      transform: rotateY(0deg) translate(-50%); }
+      transform: none;
+      left: calc(50% - 162px); }
     .project--inactive-left.spin--left {
-      transform: rotateY(130deg) translate(-292%); }
+      transform: rotateY(-135deg) translate(-25%) scale(0.8); }
 
 .projectWrapper {
   height: 100vh;
@@ -326,7 +329,8 @@ body, html {
   position: absolute;
   overflow: hidden;
   transition: all 300ms;
-  color: transparent; }
+  color: transparent;
+  perspective: 2000px; }
 
 .project_img_div {
   width: 85%;
@@ -370,6 +374,9 @@ body, html {
     border-right: none;
     transform: rotateZ(-45deg);
     left: 5%; }
+    .cycle--left:hover {
+      border-top: 5px solid rgba(255, 255, 255, 0.4);
+      border-left: 5px solid rgba(255, 255, 255, 0.4); }
     @media (min-width: 340px) {
       .cycle--left {
         left: calc(5% + 25px); } }
@@ -380,6 +387,9 @@ body, html {
     border-left: none;
     transform: rotateZ(45deg);
     left: calc(95% - 35px); }
+    .cycle--right:hover {
+      border-top: 5px solid rgba(255, 255, 255, 0.4);
+      border-right: 5px solid rgba(255, 255, 255, 0.4); }
     @media (min-width: 340px) {
       .cycle--right {
         left: calc(95% - 50px); } }

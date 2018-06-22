@@ -11,12 +11,11 @@
   width: 300px;
   height: 100vh;
   background: rgb(13, 80, 255);
-  left: 50%;
-  transform: translateX(-50%);
+  left: calc(50% - 162px);
   border: 16px solid rgb(13, 80, 255);
   box-shadow: 0 0 20px white;
   border-radius: 15px;
-  transition: all 400ms ease-in-out;
+  transition: all 500ms ease-in-out;
   opacity: 1;
   visibility: visible;
   z-index: 5;
@@ -58,37 +57,41 @@
   }
 
   &.spin--right {
-    transform: rotateY(-65deg) translate(55%);
+    transform: translate(68%) rotateY(65deg) scale(0.93);
   }
 
   &.spin--left {
-    transform: rotateY(65deg) translate(-292%);
+    transform : translate(-68%) rotateY(-65deg) scale(0.93);
   }
 
   &--inactive-right {
-    transform: rotateY(-65deg) translate(55%);
     z-index: 4;
+    transform: rotateY(65deg) translate(55%);
+    left: calc(50% + 5px);
 
     &.spin--right {
-      transform: rotateY(-130deg) translate(55%);
+      transform: rotateY(130deg) translate(55%) scale(0.8);
+      z-index: 3;
     }
 
     &.spin--left {
-      transform: rotateY(0deg) translate(-50%);
+      transform: none;
+      left: calc(50% - 162px);
     }
   }
 
   &--inactive-left {
-    transform: rotateY(65deg) translate(-292%);
     z-index: 4;
+    transform: rotateY(-65deg) translateX(-55%);
+    left: calc(50% - 330px);
 
     &.spin--right {
-      z-index: 6;
-      transform: rotateY(0deg) translate(-50%);
+      transform: none;
+      left: calc(50% - 162px);
     }
 
     &.spin--left {
-      transform: rotateY(130deg) translate(-292%);
+      transform: rotateY(-135deg) translate(-25%) scale(0.8);
     }
   }
 }
@@ -100,6 +103,7 @@
   overflow: hidden;
   transition: all 300ms;
   color: transparent;
+  perspective: 2000px;
 }
 
 .project_img_div {
@@ -156,6 +160,11 @@
     transform: rotateZ(-45deg);
     left: 5%;
 
+    &:hover {
+      border-top: 5px solid rgba(255, 255, 255, 0.4);
+      border-left: 5px solid rgba(255, 255, 255, 0.4);
+    }
+
     @media (min-width: 340px) {
       left: calc(5% + 25px);
     }
@@ -169,6 +178,11 @@
     border-left: none;
     transform: rotateZ(45deg);
     left: calc(95% - 35px);
+
+    &:hover {
+      border-top: 5px solid rgba(255, 255, 255, 0.4);
+      border-right: 5px solid rgba(255, 255, 255, 0.4);
+    }
 
     @media (min-width: 340px) {
       left: calc(95% - 50px);
