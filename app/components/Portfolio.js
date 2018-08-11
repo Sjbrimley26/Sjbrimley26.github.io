@@ -254,9 +254,7 @@ const renderProjects = context => {
   ];
 };
 
-/*
-  This hinges on the animation class being the last one in the classList
-*/
+// This hinges on the animation class being the last one in the classList
 
 const removeAnimationClasses = () => {
   const createArrayFromClass = className => {

@@ -11,15 +11,31 @@ class Home extends Component {
   }
 
   render() {
+    const renderLink = (link, i) => {
+      return (
+        <button
+          onClick={this.navTo.bind(null, `/${link}`)}
+          className="link"
+          key={i}
+        >
+        { link.split("")[0].toUpperCase() + link.slice(1) }
+        </button>
+      );
+    };
+
+    const links = [
+      "about",
+      "portfolio",
+      "contact",
+      "survey"
+    ];
+
     return (
       <div className="mainColumn">
       <div className="background"/>
         <div className="bigS">S</div>
         <div className="bumper"/>
-        <button onClick={this.navTo.bind(null, "/about")} className="link">About</button>
-        <button onClick={this.navTo.bind(null, "/portfolio")}  className="link">Portfolio</button>
-        <button onClick={this.navTo.bind(null, "/contact")}  className="link">Contact</button>
-        <button onClick={this.navTo.bind(null, "/survey")}  className="link">Survey</button>
+        { links.map((link, i) => renderLink(link, i)) }
       </div>
     );
   }

@@ -1,16 +1,16 @@
 {
   "main.js": "./bundle.js",
-  "e-juice_db.jpg": "./5b5b5d70619e40db86d240de5e559459.jpg",
-  "ww.jpg": "./e1aadaac68650bfe00f3fa35c7b4c533.jpg",
-  "weather_app.jpg": "./1c47e68876fcd7c2af3657d53dd23d89.jpg",
-  "tic_tac_toe.jpg": "./8d929b6490bff6a286dc06d71313b760.jpg",
-  "shop.doormanstan.jpg": "./73383293ef46a6cd1d51e45579ebf507.jpg",
-  "google_sheets_crud.jpg": "./23e2c36c8adbaaa186fc0025753d85f5.jpg",
-  "fair_rentals.jpg": "./3638003cddf54868299a980089f5c373.jpg",
   "wiki_app.jpg": "./07b7b2a75577d37f9a79f374682b606c.jpg",
+  "e-juice_db.jpg": "./5b5b5d70619e40db86d240de5e559459.jpg",
+  "google_sheets_crud.jpg": "./23e2c36c8adbaaa186fc0025753d85f5.jpg",
   "pinterest_clone.jpg": "./dec5cc5caa65ecb6346f968a442f6ac0.jpg",
+  "shop.doormanstan.jpg": "./73383293ef46a6cd1d51e45579ebf507.jpg",
+  "tic_tac_toe.jpg": "./8d929b6490bff6a286dc06d71313b760.jpg",
+  "weather_app.jpg": "./1c47e68876fcd7c2af3657d53dd23d89.jpg",
+  "fair_rentals.jpg": "./3638003cddf54868299a980089f5c373.jpg",
+  "ww.jpg": "./e1aadaac68650bfe00f3fa35c7b4c533.jpg",
   "favicon.ico": "./favicon.ico",
   "index.html": "./index.html",
-  "logo.png": "./logo.png",
-  "manifest.json": "./manifest.json"
+  "manifest.json": "./manifest.json",
+  "logo.png": "./logo.png"
 }

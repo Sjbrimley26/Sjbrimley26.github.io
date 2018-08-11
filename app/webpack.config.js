@@ -3,16 +3,19 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ManifestPlugin = require('webpack-manifest-plugin');
 const SWPrecacheWebpackPlugin = require("sw-precache-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-
+const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
 
 module.exports = {
   entry: "./src/app.js",
+  
   output: {
     path: path.resolve(__dirname, "build"),
     filename: "bundle.js",
     publicPath: "./"
   },
+
   watch: true,
+
   module: {
     rules: [
       {
@@ -42,6 +45,7 @@ module.exports = {
       },
     ]
   },
+
   plugins: [
     new HtmlWebpackPlugin({
       template: "!!prerender-loader?string!./src/index.html",
@@ -66,5 +70,14 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: 'src/pwa'
     }])
-  ]
+  ],
+
+  optimization: {
+    minimizer: [
+      new UglifyJSPlugin({
+        cache: true,
+        parallel: true
+      })
+    ]
+  }
 };

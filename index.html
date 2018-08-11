@@ -393,6 +393,60 @@ body, html {
     @media (min-width: 340px) {
       .cycle--right {
         left: calc(95% - 50px); } }
+</style><style type="text/css">.contact {
+  position: absolute;
+  width: 320px;
+  left: calc(50% - 160px);
+  background: white;
+  border-radius: 16px;
+  height: 100%;
+  top: 0;
+  color: #102c3a; }
+  @media (min-height: 700px) {
+    .contact {
+      height: 60vh;
+      top: calc(50% - 30vh); } }
+  .contact h2 {
+    width: 50%;
+    margin: auto;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: 600; }
+    @media (min-height: 840px) {
+      .contact h2 {
+        margin-top: 20px; } }
+  .contact .column {
+    display: flex;
+    flex-direction: column; }
+    .contact .column * {
+      margin-left: 20px; }
+    .contact .column label {
+      margin-top: 20px;
+      font-size: 1.2em;
+      text-decoration: underline; }
+    .contact .column input {
+      width: 75%;
+      padding: 12px;
+      font-size: 1.1em;
+      margin: auto;
+      margin-top: 10px; }
+      .contact .column input.submitter {
+        width: 25%;
+        margin-left: 65%; }
+        @media (min-height: 840px) {
+          .contact .column input.submitter {
+            padding: 16px; } }
+      @media (min-height: 840px) {
+        .contact .column input {
+          margin-top: 20px; } }
+  @media (min-width: 320px) {
+    .contact {
+      width: calc(50% + 160px);
+      left: calc(50% - (25% + 80px)); } }
+  @media (min-width: 880px) {
+    .contact {
+      width: 600px;
+      left: calc(50% - 300px); } }
 </style><link rel="shortcut icon" href="./favicon.ico"></head>
 <body>
   <div id="app"><div class="fullscreen"><div class="mainColumn"><div class="background"></div><div class="bigS">S</div><div class="bumper"></div><button class="link">About</button><button class="link">Portfolio</button><button class="link">Contact</button><button class="link">Survey</button></div></div></div>
