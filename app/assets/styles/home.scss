@@ -60,6 +60,15 @@ $numOfLinks: 7; // actual number of links + 3
     }
   }
 
+  .links {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
   .link {
     margin: 20px;
     display: block;
@@ -75,11 +84,8 @@ $numOfLinks: 7; // actual number of links + 3
     font-weight: 700;
     transition: all 0.2s;
     z-index: 2;
-
-    &:focus,
-    &:active {
-      background: rgba(23, 84, 140, 0.8);
-    }
+    box-sizing: border-box;
+    mix-blend-mode: multiply;
 
     @for $i from 1 through $numOfLinks {
       &:nth-child(#{$i}) {
@@ -94,29 +100,21 @@ $numOfLinks: 7; // actual number of links + 3
       padding: 20px;
     }
 
-    
-  }
-  &:hover>.link {
-    transform: scale(0.75, 0.75);
-    background: rgba(10, 25, 39, 0.8);
-    text-shadow: 0 0 12px white;
-    mix-blend-mode: multiply;
-    color: white;
-    font-size: 1.3em;
+    &:hover {
+      background: rgb(16, 8, 43);
+      text-shadow: 0 0 12px white;
+      mix-blend-mode: normal;
+      font-size: 1.3em;
+    }
 
     &:focus,
     &:active {
       background: rgba(23, 84, 140, 1);
       mix-blend-mode: luminosity;
+      font-size: 1.3em;
     }
-  }
-  &:hover>.link:hover {
-    transform: scale(1.25, 1.25);
-    background: rgba(181, 218, 252, 0.6);
-    text-shadow: 0 0 10px black;
-    color: white;
-    mix-blend-mode: luminosity;
-    font-size: 1.3em;
+
+    
   }
 
   @media (min-width: 600px) {

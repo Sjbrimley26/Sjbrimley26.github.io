@@ -26,16 +26,16 @@ class Home extends Component {
     const links = [
       "about",
       "portfolio",
-      "contact",
-      "survey"
+      "contact"
     ];
 
     return (
       <div className="mainColumn">
       <div className="background"/>
         <div className="bigS">S</div>
-        <div className="bumper"/>
-        { links.map((link, i) => renderLink(link, i)) }
+        <div className="links">
+          { links.map((link, i) => renderLink(link, i)) }
+        </div>
       </div>
     );
   }

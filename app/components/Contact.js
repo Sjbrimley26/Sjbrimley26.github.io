@@ -16,7 +16,7 @@ const Contact = () => {
 
   return <div className="fullscreen" onClick={goHome}>
       <div className="contact">
-        <h2>Want to get in touch?</h2>
+        <h2><span>Want to get in touch?</span></h2>
         <form action="https://formspree.io/sjbrimley26@live.com" method="POST">
           <div className="column">
             <label htmlFor="name">Name: </label>
