@@ -29,7 +29,7 @@ body, html {
   width: 100%;
   color: white;
   font-family: 'Playfair Display', serif;
-  background: linear-gradient(160deg, #3e82af, #2c5e80, #0b1c28, #14364d, #2c5e80, #3e82af); }
+  background: #2c5e80; }
 
 #app {
   width: 100%;
@@ -235,17 +235,20 @@ body, html {
   @media (min-width: 400px) {
     .sidebar {
       padding-right: 10px;
-      margin-top: 0; } }
+      margin-top: 0;
+      max-width: 160px; } }
 
 .mainContent {
   flex: 11;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; }
+  justify-content: center;
+  max-width: 1000px; }
   @media (min-width: 400px) {
     .mainContent {
-      overflow-y: scroll; } }
+      overflow-y: hidden;
+      margin: auto; } }
   .mainContent p {
     margin: 10px;
     text-shadow: 0 0 5px black; }
@@ -412,12 +415,17 @@ body, html {
     margin-top: 10px;
     text-align: center;
     font-weight: 600; }
+    .contact h2 span {
+      background: #c3d9e9;
+      padding: 12px;
+      border-radius: 24px; }
     @media (min-height: 840px) {
       .contact h2 {
         margin-top: 20px; } }
   .contact .column {
     display: flex;
-    flex-direction: column; }
+    flex-direction: column;
+    padding: 5%; }
     .contact .column * {
       margin-left: 20px; }
     .contact .column label {
@@ -432,7 +440,8 @@ body, html {
       margin-top: 10px; }
       .contact .column input.submitter {
         width: 25%;
-        margin-left: 65%; }
+        margin-left: 65%;
+        border-radius: 10px; }
         @media (min-height: 840px) {
           .contact .column input.submitter {
             padding: 16px; } }
@@ -449,7 +458,7 @@ body, html {
       left: calc(50% - 300px); } }
 </style><link rel="shortcut icon" href="./favicon.ico"></head>
 <body>
-  <div id="app"><div class="fullscreen"><div class="mainColumn"><div class="background"></div><div class="bigS">S</div><div class="bumper"></div><button class="link">About</button><button class="link">Portfolio</button><button class="link">Contact</button><button class="link">Survey</button></div></div></div>
+  <div id="app"><div class="fullscreen"><div class="mainColumn"><div class="background"></div><div class="bigS">S</div><button class="link">About</button><button class="link">Portfolio</button><button class="link">Contact</button></div></div></div>
   <noscript>
     You don't have Javascript!
     Have you tried <a href="https://www.google.com/chrome/">Google Chrome</a>?
