@@ -19,11 +19,19 @@
     margin-top: 10px;
     text-align: center;
     font-weight: 600;
+    margin-bottom: 20px;
 
     span {
-      background: rgb(195, 217, 233);
-      padding: 12px;
-      border-radius: 24px;
+      background: rgba(195, 217, 233, 0.4);
+      box-shadow: 0 0 94px 6px lightblue;
+      display: block;
+      border-radius: 12px;
+
+      @media (min-width: 690px) {
+        padding: 12px;
+        border-radius: 24px;
+      }
+      
     }
 
     @media (min-height: 840px) {
@@ -34,16 +42,20 @@
   .column {
     display: flex;
     flex-direction: column;
-    padding: 5%;
+    padding: 0 5%;
 
     * {
       margin-left: 20px;
     }
 
     label {
-      margin-top: 20px;
+      margin-top: 15px;
       font-size: 1.2em;
       text-decoration: underline;
+      box-shadow: 0 20px 15px -12px lavender;
+      width: 60%;
+      padding: 5px 20px;
+      border-radius: 8px;
     }
 
     input {
@@ -54,9 +66,12 @@
       margin-top: 10px;
       
       &.submitter {
-        width: 25%;
-        margin-left: 65%;
-        border-radius: 10px;
+        width: 80px;
+        position: absolute;
+        left: calc(95% - 80px);
+        height: 60px;
+        top: calc(95% - 40px);
+        margin: inherit;
 
         @media (min-height: 840px) {
           padding: 16px;

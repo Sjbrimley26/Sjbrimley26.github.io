@@ -90,6 +90,13 @@ body, html {
     @media (min-width: 560px) {
       .mainColumn .bumper {
         height: 28%; } }
+  .mainColumn .links {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; }
   .mainColumn .link {
     margin: 20px;
     display: block;
@@ -104,9 +111,9 @@ body, html {
     color: white;
     font-weight: 700;
     transition: all 0.2s;
-    z-index: 2; }
-    .mainColumn .link:focus, .mainColumn .link:active {
-      background: rgba(23, 84, 140, 0.8); }
+    z-index: 2;
+    box-sizing: border-box;
+    mix-blend-mode: multiply; }
     .mainColumn .link:nth-child(1) {
       animation-name: slide_in;
       animation-duration: 650ms;
@@ -139,23 +146,15 @@ body, html {
       .mainColumn .link {
         font-size: 1.1em;
         padding: 20px; } }
-  .mainColumn:hover > .link {
-    transform: scale(0.75, 0.75);
-    background: rgba(10, 25, 39, 0.8);
-    text-shadow: 0 0 12px white;
-    mix-blend-mode: multiply;
-    color: white;
-    font-size: 1.3em; }
-    .mainColumn:hover > .link:focus, .mainColumn:hover > .link:active {
+    .mainColumn .link:hover {
+      background: #10082b;
+      text-shadow: 0 0 12px white;
+      mix-blend-mode: normal;
+      font-size: 1.3em; }
+    .mainColumn .link:focus, .mainColumn .link:active {
       background: #17548c;
-      mix-blend-mode: luminosity; }
-  .mainColumn:hover > .link:hover {
-    transform: scale(1.25, 1.25);
-    background: rgba(181, 218, 252, 0.6);
-    text-shadow: 0 0 10px black;
-    color: white;
-    mix-blend-mode: luminosity;
-    font-size: 1.3em; }
+      mix-blend-mode: luminosity;
+      font-size: 1.3em; }
   @media (min-width: 600px) {
     .mainColumn {
       width: 50%;
@@ -416,9 +415,11 @@ body, html {
     text-align: center;
     font-weight: 600; }
     .contact h2 span {
-      background: #c3d9e9;
-      padding: 12px;
-      border-radius: 24px; }
+      background: #c3d9e9; }
+    @media (min-width: 690px) {
+      .contact h2 {
+        padding: 12px;
+        border-radius: 24px; } }
     @media (min-height: 840px) {
       .contact h2 {
         margin-top: 20px; } }
@@ -458,7 +459,7 @@ body, html {
       left: calc(50% - 300px); } }
 </style><link rel="shortcut icon" href="./favicon.ico"></head>
 <body>
-  <div id="app"><div class="fullscreen"><div class="mainColumn"><div class="background"></div><div class="bigS">S</div><button class="link">About</button><button class="link">Portfolio</button><button class="link">Contact</button></div></div></div>
+  <div id="app"><div class="fullscreen"><div class="mainColumn"><div class="background"></div><div class="bigS">S</div><div class="links"><button class="link">About</button><button class="link">Portfolio</button><button class="link">Contact</button></div></div></div></div>
   <noscript>
     You don't have Javascript!
     Have you tried <a href="https://www.google.com/chrome/">Google Chrome</a>?
