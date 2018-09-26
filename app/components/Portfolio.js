@@ -9,6 +9,7 @@ import doorImage from "../assets/images/shop.doormanstan.jpg";
 import toeImage from "../assets/images/tic_tac_toe.jpg";
 import weatherImage from "../assets/images/weather_app.jpg";
 import wikiImage from "../assets/images/wiki_app.jpg";
+import dhrImage from "../assets/images/dhr.jpg";
 
 class Portfolio extends Component {
   constructor(props) {
@@ -45,7 +46,8 @@ const setInitialState = () => {
     "DoorManStan": doorImage,
     "Tic Tac Toe": toeImage,
     "Weather App": weatherImage,
-    "Wiki App": wikiImage
+    "Wiki App": wikiImage,
+    "Dad\'s Home Restoration": dhrImage,
   };
 
   const project = (title, url, gitUrl) => {
@@ -101,6 +103,11 @@ const setInitialState = () => {
         "Wiki App",
         "https://codepen.io/sjbrimley26/pen/LjmMgp",
         undefined
+      ),
+      project(
+        "Dad\'s Home Restoration",
+        undefined,
+        "https://github.com/Sjbrimley26/dadsHomeRestoration"
       )
     ]
   };

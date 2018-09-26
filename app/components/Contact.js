@@ -1,21 +1,11 @@
 import React from "react";
+import BackButton from "./BackButton";
 
 const Contact = () => {
 
-  const navTo = url => {
-    return window.location = url;
-  };
-
-  const goHome = e => {
-    if ( e.target.className == "fullscreen" ) {
-      window.location.toString().indexOf("file") != -1 ?
-      navTo("file:///D:/Node/Sjbrimley26.github.io/app/build/index.html#/") :
-      navTo("https://sjbrimley26.github.io");
-    }
-  };
-
-  return <div className="fullscreen" onClick={goHome}>
+  return <div className="fullscreen">
       <div className="contact">
+        <BackButton top="5" left="5" />
         <h2><span>Want to get in touch?</span></h2>
         <form action="https://formspree.io/sjbrimley26@live.com" method="POST">
           <div className="column">

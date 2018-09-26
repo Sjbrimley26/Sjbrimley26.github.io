@@ -267,9 +267,9 @@ body, html {
   position: absolute;
   width: 300px;
   height: 100vh;
-  background: #0d50ff;
+  background: white;
   left: calc(50% - 162px);
-  border: 16px solid #0d50ff;
+  border: 16px solid white;
   box-shadow: 0 0 20px white;
   border-radius: 15px;
   transition: all 500ms ease-in-out;
@@ -287,8 +287,8 @@ body, html {
       text-decoration: none;
       color: white;
       display: inline-block;
-      padding: 5px;
-      background: #4b7af3;
+      padding: 15px;
+      background: #41495d;
       border: 1px hidden;
       border-radius: 10px;
       text-shadow: 0 0 1px black, 0 0 2px black, 0 0 3px black, 0 0 5px black; }
@@ -370,28 +370,28 @@ body, html {
     opacity: 0;
     visibility: hidden; }
   .cycle--left {
-    border-top: 5px solid white;
-    border-left: 5px solid white;
+    border-top: 5px solid deepskyblue;
+    border-left: 5px solid deepskyblue;
     border-bottom: none;
     border-right: none;
     transform: rotateZ(-45deg);
     left: 5%; }
     .cycle--left:hover {
-      border-top: 5px solid rgba(255, 255, 255, 0.4);
-      border-left: 5px solid rgba(255, 255, 255, 0.4); }
+      border-top: 5px solid rgba(0, 0, 0, 0.4);
+      border-left: 5px solid rgba(0, 0, 0, 0.4); }
     @media (min-width: 340px) {
       .cycle--left {
         left: calc(5% + 25px); } }
   .cycle--right {
-    border-top: 5px solid white;
-    border-right: 5px solid white;
+    border-top: 5px solid deepskyblue;
+    border-right: 5px solid deepskyblue;
     border-bottom: none;
     border-left: none;
     transform: rotateZ(45deg);
     left: calc(95% - 35px); }
     .cycle--right:hover {
-      border-top: 5px solid rgba(255, 255, 255, 0.4);
-      border-right: 5px solid rgba(255, 255, 255, 0.4); }
+      border-top: 5px solid rgba(0, 0, 0, 0.4);
+      border-right: 5px solid rgba(0, 0, 0, 0.4); }
     @media (min-width: 340px) {
       .cycle--right {
         left: calc(95% - 50px); } }
@@ -406,33 +406,57 @@ body, html {
   color: #102c3a; }
   @media (min-height: 700px) {
     .contact {
-      height: 60vh;
-      top: calc(50% - 30vh); } }
+      height: 70vh;
+      top: 15vh; } }
+  .contact .backButton {
+    height: 50px;
+    width: 50px;
+    background: rgba(126, 199, 251, 0.575);
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(38, 125, 187, 0.445); }
+    .contact .backButton span {
+      position: absolute;
+      top: -2px;
+      font-size: 2em;
+      font-weight: 900;
+      left: 9px;
+      color: white;
+      text-shadow: 0 0 10px #092c46; }
   .contact h2 {
     width: 50%;
     margin: auto;
     margin-top: 10px;
     text-align: center;
-    font-weight: 600; }
+    font-weight: 600;
+    margin-bottom: 20px; }
     .contact h2 span {
-      background: #c3d9e9; }
-    @media (min-width: 690px) {
-      .contact h2 {
-        padding: 12px;
-        border-radius: 24px; } }
+      background: rgba(195, 217, 233, 0.205);
+      display: block;
+      border-radius: 12px;
+      padding: 6px;
+      box-shadow: none; }
+      @media (min-width: 690px) {
+        .contact h2 span {
+          padding: 12px;
+          border-radius: 24px; } }
     @media (min-height: 840px) {
       .contact h2 {
         margin-top: 20px; } }
   .contact .column {
     display: flex;
     flex-direction: column;
-    padding: 5%; }
+    padding: 0 5%; }
     .contact .column * {
       margin-left: 20px; }
     .contact .column label {
-      margin-top: 20px;
+      margin-top: 15px;
       font-size: 1.2em;
-      text-decoration: underline; }
+      text-decoration: underline;
+      box-shadow: 0 20px 15px -12px lavender;
+      width: 60%;
+      padding: 5px 20px;
+      border-radius: 8px; }
     .contact .column input {
       width: 75%;
       padding: 12px;
@@ -440,9 +464,14 @@ body, html {
       margin: auto;
       margin-top: 10px; }
       .contact .column input.submitter {
-        width: 25%;
-        margin-left: 65%;
-        border-radius: 10px; }
+        width: 80px;
+        position: absolute;
+        left: calc(95% - 80px);
+        height: 60px;
+        top: calc(95% - 40px);
+        margin: inherit;
+        border-radius: 15px;
+        border-style: ridge; }
         @media (min-height: 840px) {
           .contact .column input.submitter {
             padding: 16px; } }
