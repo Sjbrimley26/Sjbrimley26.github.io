@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Case study: the ERP for an 11-person door and trim distributor — Spencer Brimley</title>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a class="here" href="portfolio.html">Portfolio</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+  <main class="page">
+
+    <h1 style="font-size:1.5em">Case study: building the ERP for an 11-person door and trim distributor</h1>
+    <p class="footnote">Spencer Brimley · Baserow + n8n + Python + QuickBooks Online · Aug 2022 – Oct 2026</p>
+
+    <div class="case panel">
+      <h2 style="margin-top:.4em">At a glance</h2>
+      <ul>
+        <li><strong>Company:</strong> Aztec Doors &amp; Trim (Legacy Doors &amp; Trim since June 2026), Mesa AZ.
+          Interior and exterior doors, mouldings and hardware; about $3.1M in sales in 2025.</li>
+        <li><strong>My role:</strong> General Manager — and the only person building the system:
+          design, build, rollout, training and support.</li>
+        <li><strong>Stack:</strong> Baserow (open-source no-code database) for the data and screens,
+          n8n for 29 automations, Python for SKU matching and accounts-payable checks, QuickBooks Online
+          as the accounting system. Self-hosted on a Linux server I run (rootless Podman containers behind
+          a Caddy reverse proxy).</li>
+        <li><strong>Scale:</strong> 31 tables in two databases, 32 table-to-table links, 64 saved views.
+          About 3,100 invoices, 3,100 purchase orders, 800 customers, 1,400 logged calls, and a catalog
+          of about 900 items with 1,428 vendor part numbers cross-referenced.</li>
+        <li><strong>Adoption:</strong> every employee used it, and three were daily power users.</li>
+        <li><strong>Results:</strong> an estimated 10+ staff hours saved a week, measured by timing the
+          manual steps each automation replaced. In the week of Nov 8, 2026 it handled about 1,100
+          business automations a day.</li>
+      </ul>
+    </div>
+
+    <h2>The problem</h2>
+    <p>The business ran on paper and QuickBooks. QuickBooks held the money, but nothing tracked the work
+    between a quote and a delivery, so three things kept going wrong:</p>
+    <ul>
+      <li>Backorders weren't passed on to customers.</li>
+      <li>Items never got ordered.</li>
+      <li>Customers weren't told when their orders were ready.</li>
+    </ul>
+    <p>The catalog had no SKUs either. The same door was written a dozen ways ("2-6 6-8 2-Panel Monroe
+    HC"), so prices, reorders and vendor matching all depended on someone's memory.</p>
+
+    <h2>How I built it</h2>
+    <ol>
+      <li><strong>I started small.</strong> The first version (August 2022) was a task board on Vikunja,
+        an open-source task manager, to track orders that used to live on paper. Once the process was
+        clear I rebuilt it as a proper database on Baserow.</li>
+      <li><strong>I mapped the work before building anything.</strong> I followed an order from estimate
+        to invoice, purchase order, receiving, production, delivery or will-call, and payment, and noted
+        who touched it at each step.</li>
+      <li><strong>I designed the data model around that flow</strong>, in two databases:
+        <em>Operations</em> (17 tables: Estimates, Worksheet Lines, Invoices, Purchase Orders, Hardware
+        Orders, Production, Deliveries, Will Calls, Installs, Customers, Vendors, Notes, Call Log, Bill
+        Discrepancies, Cost Edit Log, and two support tables) and <em>Catalog</em> (14 tables: Doors,
+        Door Styles, Door Types, Mouldings, Parts, Services, Vendors, Vendor Item Codes, and an
+        inventory module).</li>
+      <li><strong>I gave the catalog SKUs.</strong> Every item got one, and each vendor's own part
+        numbers map to it (1,428 cross-references). I wrote a Python resolver that reads a shop-floor
+        description and returns the SKU, and flags anything ambiguous for a person to review instead of
+        guessing.</li>
+      <li><strong>QuickBooks stayed the book of record.</strong> I didn't replace accounting. Baserow
+        runs operations, and n8n keeps the two in sync through QuickBooks webhooks and API calls, so
+        staff never type the same thing into both.</li>
+      <li><strong>I built screens around each person's job.</strong> Each role gets its own views
+        (61 grids, 2 calendars, 1 kanban board): the shop sees production, the driver sees deliveries,
+        the office sees what still needs ordering.</li>
+    </ol>
+
+    <figure class="shot">
+      <img src="img/catalog.png" alt="Baserow grid view of the door catalog: SKU, style, type, purchase and sales price, preferred vendor">
+      <figcaption>The catalog, with SKUs. Every row cross-references the vendors' own part numbers.</figcaption>
+    </figure>
+
+    <h2>The automation layer (29 n8n workflows)</h2>
+    <table>
+      <tr><th>Area</th><th>Workflows</th><th>What they do</th></tr>
+      <tr><td>Accounting sync</td><td>8</td><td>QuickBooks webhooks, customer sync into Baserow, price sync, routing estimate worksheets into QuickBooks estimates and invoices, review and total checks</td></tr>
+      <tr><td>Shop floor</td><td>8</td><td>Create production and delivery lines from invoices, batch status updates, a weekly production calendar, will-call and invoice status updates</td></tr>
+      <tr><td>Purchasing &amp; pricing</td><td>6</td><td>PO updates, "no acknowledgement" and "not ordered" alerts, bill-intake alerts, price lookup and cost edits (with an audit log)</td></tr>
+      <tr><td>Customer contact</td><td>5</td><td>Pop up the caller's account on screen when the phone rings, phone events from Podium, alerts for estimates missing a customer, quick notes</td></tr>
+      <tr><td>Operations</td><td>2</td><td>Heartbeats for scheduled jobs, plus an MCP endpoint that lets an AI assistant query the ERP</td></tr>
+    </table>
+    <p>Two Python components sit beside n8n: <strong>accounts payable</strong> (reads vendor bills as
+    PDFs, matches each line to our PO, records price and quantity differences in a Bill Discrepancies
+    table for review, and enters approved bills into QuickBooks Online) and the <strong>SKU resolver</strong>
+    (step 4 above).</p>
+
+    <figure class="shot">
+      <img src="img/n8n-qbo-webhooks.png" alt="n8n canvas of the QBO Webhooks workflow, dozens of connected nodes">
+      <figcaption>The QuickBooks webhook workflow: customer, price and estimate sync, with review gates.</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <img src="img/kanban.png" alt="Kanban board of invoices in stages: Uncategorized, Awaiting Deposit, Not Ordered, Awaiting Materials, Awaiting Production">
+      <figcaption>The invoice kanban: nothing sits in a folder unseen — each column is something a person has to act on.</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <img src="img/po-ack.png" alt="Saved view of purchase orders pending acknowledgement">
+      <figcaption>A purchasing view: POs that vendors never acknowledged, before they become a shortage.</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <img src="img/bill-discrepancies.png" alt="Bill Discrepancies table">
+      <figcaption>The accounts-payable checks: every price or quantity difference our bills disagree with our POs on, logged for review.</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <img src="img/production-calendar.png" alt="Production calendar view">
+      <figcaption>The weekly production calendar the shop floor works from.</figcaption>
+    </figure>
+
+    <h2>Rollout and training</h2>
+    <ul>
+      <li>I trained every employee one-on-one, then presented SOPs and job aids to the whole team.</li>
+      <li>I trained three power users early, so the rest of the staff had someone to ask besides me.</li>
+      <li>The hardest part was the SKUs. Making the catalog consistent meant retiring a lot of old
+        codes, and for a while staff were annoyed at learning new ones. Once they had, they liked the
+        consistency, and it made them faster.</li>
+    </ul>
+
+    <h2>Results</h2>
+    <ul>
+      <li><strong>Time:</strong> an estimated 10+ staff hours saved a week. I timed how long each step
+        took by hand (print a sheet, scan it, write it on the calendar) and compared it with the
+        automated version. I think the estimate is conservative.</li>
+      <li><strong>Faster quotes:</strong> estimates are built from catalog SKUs with current prices and
+        routed into QuickBooks automatically.</li>
+      <li><strong>Customers kept informed:</strong> customers got text messages about backorders and
+        when their orders were ready — the two things that used to fall through the cracks.</li>
+      <li><strong>Nothing forgotten:</strong> reminders to order materials, and alerts when a PO was
+        never placed or never acknowledged.</li>
+      <li><strong>Fewer vendor errors:</strong> order acknowledgements and vendor bills are checked
+        against our POs for price and quantity differences before anyone pays.</li>
+      <li><strong>One price everywhere:</strong> prices stay in sync across QuickBooks, the catalog and
+        vendor price sheets.</li>
+      <li><strong>Volume:</strong> in the week of Nov 8, 2026, about 6,900 business automation runs
+        (about 1,100 a day) plus 3,200 monitoring checks, with no errors recorded in that window.</li>
+    </ul>
+
+    <h2>What happened next, and what I'd do differently</h2>
+    <p>After the 2026 acquisition, the new owner decided to run the business on paper again, so the
+    system is being retired. That's the owner's call, and it taught me two things I now plan for from
+    day one:</p>
+    <ul>
+      <li><strong>Win over the decision-maker as well as the users.</strong> Daily use by staff doesn't
+        protect a system if the person who signs off on it isn't comfortable with it.</li>
+      <li><strong>Build it to be handed over:</strong> documentation, simple admin screens, and a clean
+        export, so a new owner can keep it, hand it to someone else, or move off it without losing
+        anything.</li>
+    </ul>
+
+    <div class="quote">"Our distributor ran on paper and QuickBooks. Backorders weren't passed on to
+    customers, items didn't get ordered, and customers weren't told when orders were ready. I started
+    with a simple task board in 2022, then built the full system on Baserow: 31 tables, a catalog with
+    SKUs, POs, production and delivery. I connected it to QuickBooks with 29 n8n workflows, and customers
+    got texts about backorders and ready orders. Every employee used it. It saved more than 10 hours a
+    week and caught orders that used to slip. After we were acquired, the new owner chose to go back to
+    paper. That's their decision, and the lesson I took is to bring the decision-maker in early and
+    build every system so it can be handed over."</div>
+    <p class="footnote">Screenshots are from a demo copy of the system with fake names, contacts and
+    prices; SKUs and product descriptions are real. No customer records are shown anywhere.</p>
+
+  </main>
+</body>
+</html>
