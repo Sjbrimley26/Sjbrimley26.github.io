@@ -173,9 +173,12 @@
         live n8n was the source of truth. The exports were for history, review and disaster recovery,
         with a short restore procedure: import the JSON, re-link the credentials, refill the
         placeholders.</li>
-      <li><strong>Bill checker.</strong> A separate Python tool read vendor bill PDFs with a local
-        model. Code checked every number against our POs, and mismatches went to the Bill
-        Discrepancies table. When it could not match something it halted instead of guessing.</li>
+      <li><strong>Bill checker.</strong> A Python tool on the purchasing PC read vendor bill PDFs,
+        checked every number against our POs, entered the bills that reconciled in QuickBooks, and put
+        every price or quantity difference in the Bill Discrepancies table. Where code could not read a
+        line, a small local model answered one narrow question and code checked the answer. When it could
+        not match something it halted instead of guessing. <a href="bill-checker.html">How the bill
+        checker worked</a></li>
     </ul>
 
     <h2>Rollout and training</h2>

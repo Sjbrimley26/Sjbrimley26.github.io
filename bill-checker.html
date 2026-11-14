@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill checker: the model reads, code decides · Spencer Brimley</title>
+  <meta name="description" content="A Python tool that checked about 250 vendor bills a month against their purchase orders, entered the ones that reconciled in QuickBooks, and logged every difference for a person to review. A local model helped read, and code checked every answer.">
+  <link rel="canonical" href="https://spencerbrimley.com/bill-checker.html">
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="Bill checker: the model reads, code decides">
+  <meta property="og:description" content="A Python tool that checked vendor bills against their purchase orders, entered the ones that reconciled in QuickBooks, and logged every difference for a person to review.">
+  <meta property="og:url" content="https://spencerbrimley.com/bill-checker.html">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">Spencer Brimley</a>
+      <nav class="topnav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="portfolio.html" aria-current="page">Portfolio</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <h1 class="page-title">Bill checker: the model reads, code decides</h1>
+    <p class="footnote">Spencer Brimley · Python + pdftotext + QuickBooks Online + Baserow + Ollama · Sep to Nov 2026</p>
+
+    <div class="case panel">
+      <h2>At a glance</h2>
+      <ul>
+        <li><strong>Problem:</strong> about 250 vendor bills a month arrived as PDFs and had to be checked against their purchase orders before they went into QuickBooks.</li>
+        <li><strong>What I built:</strong> a Python tool that ran every morning on an office PC. It read each bill, entered the bills that reconciled in QuickBooks, and put every price or quantity difference into a Bill Discrepancies table I worked through.</li>
+        <li><strong>The rule:</strong> the model reads; code decides. A small local model answered narrow questions about the text, code checked every answer, and anything that failed went to a person instead of being guessed.</li>
+        <li><strong>Results:</strong> 294 bills and credits entered between 9 October and 11 November 2026, and 95 discrepancy lines logged on 70 bills between 9 and 28 October 2026.</li>
+        <li><strong>Status:</strong> write-up only. The code was written on company time, so the employer may own it and there is no repository.</li>
+      </ul>
+    </div>
+
+    <h2>The problem</h2>
+    <p>About 250 vendor bills came in each month, as PDFs attached to emails. Each one had to be checked
+    against its purchase order before it went into QuickBooks. Depending on the bill, checking the prices
+    took a few minutes. It took longer when there was no PO to compare against, for example when an order
+    had been phoned in, because then the bill had to be entered by hand.</p>
+    <p>A wrong bill entered is worse than a bill entered slowly. So I wanted a checker that would rather
+    stop than guess.</p>
+
+    <h2>What I built</h2>
+    <p>A separate Python tool that ran every morning on an office PC from Task Scheduler. It pulled the
+    last 30 days of bill emails from Outlook, refreshed its copy of our QuickBooks bills and POs, and read
+    each PDF. A bill whose lines added up to its printed total was entered in QuickBooks, or matched to the
+    credit already there. Each price or quantity that differed from the PO went into a Bill Discrepancies
+    table in our ERP as one line item. I worked through that table and contacted the vendor when it was
+    warranted.</p>
+    <p>Anything the tool could not settle was held with a reason. Held items went out in one email a day to
+    the sales inbox, and the PDFs stayed in a folder on the desktop for a person to handle.</p>
+    <p>Everything ran on our own machines. No cloud AI service saw a vendor document.</p>
+    <p>A sibling tool on the same PC answered price questions from vendor catalogs. Staff opened it from a
+    price-lookup screen in the ERP, which went live on 19 October 2026 and was used 533 times by
+    13 November.</p>
+
+    <h2>How it decides</h2>
+    <p>The rule I built around: the model reads; code decides. A language model may answer a narrow
+    question about text. Code checks every answer, and all the arithmetic happens in code.</p>
+    <ol>
+      <li><strong>Read (code).</strong> The text layer of each PDF is read with pdftotext and parsed by a
+        reader written for that vendor's layout. The model never retypes a table.</li>
+      <li><strong>Check the bill against itself (code).</strong> The lines must add up to the printed
+        total. If they do not, the bill is held and nothing is entered.</li>
+      <li><strong>Match lines to the PO (code, with the model as a helper).</strong> Most lines matched on
+        our SKU cross-reference. For lines that did not, a small local model was asked closed questions,
+        such as which reference field on the bill is the PO number, or whether a price is per foot or per
+        hundred feet. Code then checked the answer: a price basis has to reproduce the line total printed
+        on the bill, and a PO link has to match exactly. An empty or failed answer counts as a reject, and
+        that line goes to a person.</li>
+      <li><strong>Compare and write (code).</strong> Price and quantity differences go to Bill
+        Discrepancies. Quantities are converted to the same unit first, because a PO in linear feet against
+        a bill in pieces would invent differences that do not exist. Right before each QuickBooks write,
+        the tool checks again that the bill number is not already there. If a run would enter more bills
+        than a set limit, it stops and waits for a person.</li>
+    </ol>
+    <p>Each vendor format needed its own handling: a label on one line with its value on the next, a credit
+    that prints its amount with a trailing minus, spaces inside numbers, and two totals per invoice, one
+    before the early-pay discount and one after.</p>
+
+    <h2>Results</h2>
+    <ul>
+      <li><strong>In daily use.</strong> From 9 October to 11 November 2026 the tool entered 294 vendor
+        bills and credits in QuickBooks: 146 in the first batch on 9 October, then 148 from the unattended
+        daily run (128 bills and 20 credits). It covered the four vendors I had written readers for. Bills
+        from other vendors went to a person.</li>
+      <li><strong>Discrepancies.</strong> From 9 to 28 October 2026 it logged 95 discrepancy lines on 70
+        bills: 89 on price and 6 on quantity. By November, 91 were resolved and 4 were still open.</li>
+      <li><strong>What it caught.</strong> One vendor's prices for insert cut-outs did not match our POs.
+        Nobody knew how long that had been going on, and nobody else had caught it.</li>
+      <li><strong>The model as a helper.</strong> In the reconciliation pass of 8 October 2026, over 172
+        bill lines, code matched 118 lines on the cross-reference alone. The model helped match 39 more,
+        and code checked each one. On 15 lines the model's answer failed the check or came back empty, so
+        those went to a person.</li>
+      <li><strong>Why the model does not decide.</strong> In an October 2026 test on a synthetic PO and
+        invoice pair, a small local model asked to compare the two documents answered "no discrepancies".
+        The unit price had gone up 17.8%. Asked one narrow question at a time, the same model read the
+        fields correctly.</li>
+      <li><strong>How much the model was needed.</strong> On a batch of 23 real documents with clean text
+        layers (October 2026), code alone resolved 12 of 12 documents and 11 of 12 PO links. The model was
+        needed once, for a price column with no stated basis.</li>
+      <li><strong>Price lookup.</strong> On 17 descriptive questions (n = 17, a small sample), keyword
+        search put the right catalog item first 13 times and embedding search 8 times. On 9 test
+        questions, the same small model went from 5 to 9 correct after code labeled each price column on
+        the page. Before that, every failure was the model taking the figure from the wrong column. Tests
+        run 5 to 8 October 2026.</li>
+    </ul>
+
+    <figure class="shot">
+      <img src="img/bill-discrepancies.png" alt="Bill Discrepancies table in the ERP, one row per price or quantity difference, with status, type, bill number, bill date, PO and item">
+      <figcaption>The Bill Discrepancies table, from a demo copy with fake vendor names: one row per line where a bill and its PO disagreed. I worked through this list and contacted the vendor where it was warranted.</figcaption>
+    </figure>
+
+    <h2>What I tried and dropped</h2>
+    <ul>
+      <li><strong>Letting the model give the verdict.</strong> Dropped after the 17.8% test. The model may
+        read. It never answers "is this bill right?".</li>
+      <li><strong>A document-conversion tool (Docling) for intake.</strong> The plain text layer was
+        enough for every vendor in scope, because their bills are born digital, and it needs no model and
+        no heavy dependency (8 October 2026).</li>
+      <li><strong>Embeddings to match parts.</strong> On 236 real catalog items, similarity search put the
+        exact size first only 23 to 27% of the time. It got the door type right every time. A 15% price
+        change still scored as a perfect match, because the description had not changed. Embeddings can
+        narrow a category, but a part with an identifier should be matched on the identifier.</li>
+    </ul>
+
+    <h2>What I'd change</h2>
+    <ul>
+      <li><strong>Part numbers.</strong> Mapping a vendor's part number to our catalog was a separate
+        step, so each new vendor still needed a reader written by hand. I would build the mapping into the
+        checker so adding a vendor takes less code.</li>
+      <li><strong>The drift counter.</strong> I tracked how often the model was needed per batch, because a
+        rising count means a vendor reader has drifted. I would put that count on a dashboard so a drifting
+        reader shows up early.</li>
+    </ul>
+
+    <h2>The 60-second version</h2>
+    <div class="panel">
+      <p>About 250 vendor bills a month had to be checked against their POs before they went into
+      QuickBooks. I built a Python tool that ran every morning. It read each PDF with code, entered the
+      bills that added up and matched, and logged every price or quantity difference to a Bill
+      Discrepancies table that I worked through. A small local model helped match lines the cross-reference
+      missed, and code checked every answer it gave. Anything that did not check out was held for a person.
+      From 9 October to 11 November 2026 it entered 294 bills and credits and logged 95 discrepancy lines.
+      One of them showed that a vendor had been mispricing insert cut-outs for longer than anyone
+      knew.</p>
+    </div>
+
+    <h2>Links</h2>
+    <ul>
+      <li>The system it fed: <a href="erp-case-study.html">ERP case study</a></li>
+      <li>No repository. This is a write-up only: the code was written on company time, so the employer may
+        own it.</li>
+    </ul>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Spencer Brimley · <a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a></p>
+      <p class="links"><a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+      <p>© 2026 Spencer Brimley</p>
+    </div>
+  </footer>
+</body>
+</html>
