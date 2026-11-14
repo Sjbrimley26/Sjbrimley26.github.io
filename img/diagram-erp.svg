@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="t d">
   <title id="t">How the ERP fit together</title>
-  <desc id="d">Staff in sales, purchasing, production, delivery and office work in Baserow tables (Operations, Catalog, Bill Discrepancies). n8n runs five workflow groups between Baserow and QuickBooks Online. Podium phone events go through n8n and put the caller's account on staff screens. Worksheet PDFs reach Baserow through worksheet-sync, and vendor bills reach the Bill Discrepancies table through the bill checker.</desc>
+  <desc id="d">Staff in sales, purchasing, production, delivery and office worked in Baserow tables (Operations, Catalog, Bill Discrepancies). n8n ran five workflow groups between Baserow and QuickBooks Online. Podium phone events went through n8n and put the caller's account on staff screens. Worksheet PDFs reached Baserow through worksheet-sync, and vendor bills reached the Bill Discrepancies table through the bill checker.</desc>
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#0d1a2e"/><stop offset="1" stop-color="#08111f"/>
