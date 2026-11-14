@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio — Spencer Brimley</title>
-  <meta name="description" content="Selected projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, local AI model experiments, and earlier code.">
+  <meta name="description" content="Projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, local AI experiments on a 4 GB GPU, and earlier code.">
   <link rel="canonical" href="https://spencerbrimley.com/portfolio.html">
   <link rel="icon" href="/favicon.ico">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Spencer Brimley">
   <meta property="og:title" content="Portfolio — Spencer Brimley">
-  <meta property="og:description" content="Selected projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, local AI model experiments, and earlier code.">
+  <meta property="og:description" content="Projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, local AI experiments on a 4 GB GPU, and earlier code.">
   <meta property="og:url" content="https://spencerbrimley.com/portfolio.html">
   <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -34,29 +34,29 @@
   </header>
   <main id="main" class="page">
     <h1 class="page-title">Portfolio</h1>
-    <div class="grid">
 
+    <h2 class="work-heading">Featured</h2>
+    <div class="grid">
       <div class="card card-wide">
-        <div class="thumb plate tall" aria-hidden="true">ERP</div>
+        <img class="thumb tall" src="img/kanban.png" alt="Kanban board of invoices in Baserow, grouped by status, from a demo copy with fake data" width="1280" height="720">
         <div class="body">
-          <h3>An 11-person distributor ran on it <span class="flag">case study · 4 years in production</span></h3>
-          <p>The ERP I designed and built for the door and trim company I managed: Baserow (31 tables,
-          catalog SKUs with 1,428 vendor part-number cross-references), 29 n8n workflows syncing
-          QuickBooks Online, the shop floor, purchasing and customer texting, plus Python for SKU
-          matching and the accounts-payable bill checks. Every employee used it; it saved an estimated
-          10+ staff hours a week. Screenshots come from a demo copy with fake data.</p>
+          <h3>The ERP I built and ran a distributor on <span class="flag">Case study · system retired in 2026</span></h3>
+          <p>I was General Manager of an 11-person door and trim distributor and built its ERP on Baserow, n8n and QuickBooks Online. It started in August 2022 as a CRM and project tracker. Automation began with n8n in May 2025, and by the end it had 31 tables and 29 workflows. Every employee used it, and three were daily power users. The owner retired it in 2026. From May 2025 to November 2026 its n8n workflows handled about 46,000 business events (QuickBooks changes, order and production updates, incoming calls), plus background checks every five minutes.</p>
+          <ul class="tags"><li>Baserow</li><li>n8n</li><li>Python</li><li>QuickBooks Online</li></ul>
           <div class="links"><a href="erp-case-study.html">Read the case study →</a></div>
         </div>
       </div>
+    </div>
 
+    <h2 class="work-heading">Infrastructure and AI</h2>
+    <div class="grid">
       <div class="card">
         <div class="thumb plate" aria-hidden="true">4<span class="unit">GB</span></div>
         <div class="body">
           <h3>small-gpu-bench</h3>
-          <p>What works and what doesn't when you run real LLM tasks (redaction, document audit,
-          tool selection, judge calibration) on a 4&nbsp;GB Pascal GPU. Stdlib-only test harness,
-          checker-gated escalation pattern, cited results, and the paper trail behind every number.</p>
-          <div class="links"><a href="https://github.com/Sjbrimley26/small-gpu-bench">Repository →</a></div>
+          <p>Tests of real LLM tasks (redaction, document audit, tool selection, judge calibration) on a 4&nbsp;GB Pascal GPU. The repo has a stdlib-only test harness, a pattern where a checker decides when to escalate, and the source for every number.</p>
+          <ul class="tags"><li>Python</li><li>Ollama</li><li>Local LLMs</li></ul>
+          <div class="links"><a href="https://github.com/Sjbrimley26/small-gpu-bench">Code</a></div>
         </div>
       </div>
 
@@ -64,51 +64,22 @@
         <div class="thumb plate" aria-hidden="true">P→L</div>
         <div class="body">
           <h3>prompt-tune</h3>
-          <p>A cloud model rewrites a local model's prompt from an aggregate report only — it never
-          sees a single record of the private data. Includes the gateway, the leak tests, and the
-          honest results from the first real runs.</p>
-          <div class="links"><a href="https://github.com/Sjbrimley26/prompt-tune">Repository →</a></div>
+          <p>A cloud model rewrites a local model's prompt using only an aggregate report, so it never sees a record of the private data. The repo includes the gateway, the leak tests and the results of the first real runs.</p>
+          <ul class="tags"><li>Python</li><li>Local LLMs</li><li>Privacy tests</li></ul>
+          <div class="links"><a href="https://github.com/Sjbrimley26/prompt-tune">Code</a></div>
         </div>
       </div>
-
-      <div class="card">
-        <img class="thumb" src="img/google_sheets_crud.jpg" alt="" width="928" height="906" loading="lazy">
-        <div class="body">
-          <h3>Google Sheets CRUD</h3>
-          <p>A small library making Google Sheets work as a no-auth backend, from when the shop
-          database was a spreadsheet and a nightly script.</p>
-          <div class="links"><a href="https://github.com/Sjbrimley26/sheets-crud">Repository →</a></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <img class="thumb" src="img/fair_rentals.jpg" alt="" width="947" height="916" loading="lazy">
-        <div class="body">
-          <h3>Fair Rentals</h3>
-          <p>Chingu team project (4-person remote team, 2017): MERN + GraphQL/Apollo with Auth0 login.
-          Top committer of the voyage; my first real Git pull-request + CI workflow.</p>
-          <div class="links"><a href="https://github.com/chingu-voyage3/fair-rentals">Repository →</a></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <img class="thumb" src="img/shop.doormanstan.jpg" alt="" width="926" height="904" loading="lazy">
-        <div class="body">
-          <h3>Shop.Doormanstan</h3>
-          <p>The store's online catalog and the Lambda/Express+DynamoDB backend behind it. The site
-          itself retired with the original business; the repo remains.</p>
-          <div class="links"><a href="https://github.com/Sjbrimley26/doorman-jamb-backend">Backend repo →</a>
-          <a href="https://github.com/Sjbrimley26/jambCalculator">Jamb calculator →</a></div>
-        </div>
-      </div>
-
     </div>
-    <p class="footnote">Older and just for fun: <a href="https://github.com/Sjbrimley26/Hex-SRPG">Hex-SRPG</a>,
-    <a href="https://github.com/Sjbrimley26/redRouge">redRouge</a>,
-    <a href="https://github.com/Sjbrimley26/sjb-utils">sjb-utils</a>,
-    <a href="https://github.com/Sjbrimley26/TD-Parser">TD-Parser</a> — full list on
-    <a href="https://github.com/Sjbrimley26">GitHub</a>.</p>
-  
+
+    <h2 class="work-heading">Earlier work (2017-2021)</h2>
+    <ul class="earlier">
+      <li><strong>Shop.Doormanstan</strong>: the store's online catalog and its Lambda, Express and DynamoDB backend. The site closed with the original business. Code: <a href="https://github.com/Sjbrimley26/doorman-jamb-backend">backend</a>, <a href="https://github.com/Sjbrimley26/jambCalculator">jamb calculator</a>.</li>
+      <li><strong>Fair Rentals</strong>: a 2017 Chingu project by a 4-person remote team, built with MERN, GraphQL and Auth0. <a href="https://github.com/chingu-voyage3/fair-rentals">Code</a></li>
+      <li><strong>Google Sheets CRUD</strong>: a small library that used Google Sheets as a backend with no login, from when the shop database was a spreadsheet and a nightly script. <a href="https://github.com/Sjbrimley26/sheets-crud">Code</a></li>
+      <li><strong>Godot games</strong>: a hex-grid tactics game in GDScript. <a href="https://github.com/Sjbrimley26/Hex-SRPG">Hex-SRPG</a></li>
+      <li><strong>redRouge</strong>: my first roguelike, in plain JavaScript and canvas. <a href="https://github.com/Sjbrimley26/redRouge">Code</a></li>
+    </ul>
+    <p class="footnote">More on <a href="https://github.com/Sjbrimley26">GitHub</a>.</p>
   </main>
   <footer class="site-footer">
     <div class="wrap">
