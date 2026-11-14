@@ -3,19 +3,92 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Spencer Brimley — operations, systems, automation. ERP design, AP automation, homelab engineering.">
   <title>Spencer Brimley</title>
+  <meta name="description" content="Spencer Brimley builds and rolls out ERP and low-code systems for small businesses, plus the automation and IT that keep them running. Phoenix, AZ, open to remote.">
+  <link rel="canonical" href="https://spencerbrimley.com/">
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="Spencer Brimley">
+  <meta property="og:description" content="Spencer Brimley builds and rolls out ERP and low-code systems for small businesses, plus the automation and IT that keep them running. Phoenix, AZ, open to remote.">
+  <meta property="og:url" content="https://spencerbrimley.com/">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <div class="background"></div>
-  <div class="bigS">S</div>
-  <div class="mainColumn">
-    <h1>Spencer&nbsp;Brimley</h1>
-    <a class="link" href="about.html">About</a>
-    <a class="link" href="portfolio.html">Portfolio</a>
-    <a class="link" href="contact.html">Contact</a>
-    <p class="tagline">the systems behind the work: ERP, automation, and a homelab</p>
-  </div>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">Spencer Brimley</a>
+      <nav class="topnav" aria-label="Main">
+        <a href="index.html" aria-current="page">Home</a>
+        <a href="about.html">About</a>
+        <a href="portfolio.html">Portfolio</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <section class="intro">
+      <h1>Spencer Brimley</h1>
+      <p class="lead">I build and roll out ERP and low-code systems for small businesses, and the automation and IT that keep them running.</p>
+      <p class="location">Phoenix, AZ · open to remote</p>
+      <div class="button-row">
+        <a class="button primary" href="erp-case-study.html">ERP case study</a>
+        <a class="button" href="Spencer-Brimley-Resume.pdf">Résumé (PDF)</a>
+        <a class="button" href="https://github.com/Sjbrimley26">GitHub</a>
+        <a class="button" href="contact.html">Contact</a>
+      </div>
+      <p class="summary">I was General Manager of an 11-person door and trim distributor and built the ERP it ran on, using Baserow, n8n and QuickBooks Online. Every employee used it. For AI work I run local models on private data and let code check what they return.</p>
+    </section>
+
+    <section aria-labelledby="work">
+      <h2 id="work" class="work-heading">Selected work</h2>
+      <div class="grid">
+
+        <article class="card">
+          <img class="thumb" src="img/kanban.png" alt="Kanban board of invoices in columns such as Awaiting Deposit, Not Ordered and Awaiting Production" width="1280" height="720">
+          <div class="body">
+            <h3>ERP for an 11-person distributor</h3>
+            <p>The ERP I designed, built and rolled out for the company I managed. Every employee used it; three were daily power users.</p>
+            <ul class="tags"><li>Baserow</li><li>n8n</li><li>QuickBooks Online</li><li>Python</li></ul>
+            <p class="links"><a href="erp-case-study.html">Case study</a></p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb plate" aria-hidden="true">4<span class="unit">GB</span></div>
+          <div class="body">
+            <h3>small-gpu-bench</h3>
+            <p>Real LLM tasks on a 4 GB Pascal GPU: what works, what doesn't, with every published number traceable to its source.</p>
+            <ul class="tags"><li>Python</li><li>llama.cpp</li><li>Local LLMs</li></ul>
+            <p class="links"><a href="https://github.com/Sjbrimley26/small-gpu-bench">Code</a></p>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="thumb plate" aria-hidden="true">cloud → local</div>
+          <div class="body">
+            <h3>prompt-tune</h3>
+            <p>A cloud model rewrites a local model's prompt from an aggregate report only; it never sees a single record of the private data.</p>
+            <ul class="tags"><li>Python</li><li>Local LLMs</li><li>Privacy</li></ul>
+            <p class="links"><a href="https://github.com/Sjbrimley26/prompt-tune">Code</a></p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Spencer Brimley · <a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a></p>
+      <p class="links"><a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+      <p>© 2026 Spencer Brimley</p>
+    </div>
+  </footer>
 </body>
 </html>

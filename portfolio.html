@@ -4,22 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portfolio — Spencer Brimley</title>
+  <meta name="description" content="Selected projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, local AI model experiments, and earlier code.">
+  <link rel="canonical" href="https://spencerbrimley.com/portfolio.html">
+  <link rel="icon" href="/favicon.ico">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="Portfolio — Spencer Brimley">
+  <meta property="og:description" content="Selected projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, local AI model experiments, and earlier code.">
+  <meta property="og:url" content="https://spencerbrimley.com/portfolio.html">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
   <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
-  <nav class="topnav">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a class="here" href="portfolio.html">Portfolio</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-  <main class="page">
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html">Spencer Brimley</a>
+      <nav class="topnav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="portfolio.html" aria-current="page">Portfolio</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" class="page">
+    <h1 class="page-title">Portfolio</h1>
     <div class="grid">
 
-      <div class="card" style="grid-column: 1 / -1">
-        <div class="thumb plate" style="height:230px">
-          <div style="padding-top:55px"><span style="color:#fff;mix-blend-mode:screen">ERP</span></div>
-        </div>
+      <div class="card card-wide">
+        <div class="thumb plate tall" aria-hidden="true">ERP</div>
         <div class="body">
           <h3>An 11-person distributor ran on it <span class="flag">case study · 4 years in production</span></h3>
           <p>The ERP I designed and built for the door and trim company I managed: Baserow (31 tables,
@@ -32,7 +50,7 @@
       </div>
 
       <div class="card">
-        <div class="thumb plate">4<small style="font-size:.3em">&nbsp;GB</small></div>
+        <div class="thumb plate" aria-hidden="true">4<span class="unit">GB</span></div>
         <div class="body">
           <h3>small-gpu-bench</h3>
           <p>What works and what doesn't when you run real LLM tasks (redaction, document audit,
@@ -43,7 +61,7 @@
       </div>
 
       <div class="card">
-        <div class="thumb plate">P→L</div>
+        <div class="thumb plate" aria-hidden="true">P→L</div>
         <div class="body">
           <h3>prompt-tune</h3>
           <p>A cloud model rewrites a local model's prompt from an aggregate report only — it never
@@ -54,7 +72,7 @@
       </div>
 
       <div class="card">
-        <div class="thumb" style="background-image:url('img/google_sheets_crud.jpg')"></div>
+        <img class="thumb" src="img/google_sheets_crud.jpg" alt="" width="928" height="906" loading="lazy">
         <div class="body">
           <h3>Google Sheets CRUD</h3>
           <p>A small library making Google Sheets work as a no-auth backend, from when the shop
@@ -64,7 +82,7 @@
       </div>
 
       <div class="card">
-        <div class="thumb" style="background-image:url('img/fair_rentals.jpg')"></div>
+        <img class="thumb" src="img/fair_rentals.jpg" alt="" width="947" height="916" loading="lazy">
         <div class="body">
           <h3>Fair Rentals</h3>
           <p>Chingu team project (4-person remote team, 2017): MERN + GraphQL/Apollo with Auth0 login.
@@ -74,7 +92,7 @@
       </div>
 
       <div class="card">
-        <div class="thumb" style="background-image:url('img/shop.doormanstan.jpg')"></div>
+        <img class="thumb" src="img/shop.doormanstan.jpg" alt="" width="926" height="904" loading="lazy">
         <div class="body">
           <h3>Shop.Doormanstan</h3>
           <p>The store's online catalog and the Lambda/Express+DynamoDB backend behind it. The site
@@ -90,6 +108,14 @@
     <a href="https://github.com/Sjbrimley26/sjb-utils">sjb-utils</a>,
     <a href="https://github.com/Sjbrimley26/TD-Parser">TD-Parser</a> — full list on
     <a href="https://github.com/Sjbrimley26">GitHub</a>.</p>
+  
   </main>
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>Spencer Brimley · <a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a></p>
+      <p class="links"><a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+      <p>© 2026 Spencer Brimley</p>
+    </div>
+  </footer>
 </body>
 </html>
