@@ -4,13 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bill checker: the model reads, code decides · Spencer Brimley</title>
-  <meta name="description" content="A Python tool that checked about 250 vendor bills a month against their purchase orders, entered the ones that reconciled in QuickBooks, and logged every difference for a person to review. A local model helped read, and code checked every answer.">
+  <meta name="description" content="A Python tool that ran every morning, read vendor bills against their purchase orders, entered the ones that reconciled in QuickBooks, and logged every difference for a person to review. A local model helped read, and code checked every answer.">
   <link rel="canonical" href="https://spencerbrimley.com/bill-checker.html">
   <link rel="icon" href="/favicon.ico">
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="Spencer Brimley">
   <meta property="og:title" content="Bill checker: the model reads, code decides">
-  <meta property="og:description" content="A Python tool that checked vendor bills against their purchase orders, entered the ones that reconciled in QuickBooks, and logged every difference for a person to review.">
+  <meta property="og:description" content="A Python tool that ran every morning, read vendor bills against their purchase orders, entered the ones that reconciled in QuickBooks, and logged every difference for a person to review.">
   <meta property="og:url" content="https://spencerbrimley.com/bill-checker.html">
   <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
   <meta name="twitter:card" content="summary_large_image">
@@ -34,13 +34,13 @@
   </header>
   <main id="main" class="page">
     <h1 class="page-title">Bill checker: the model reads, code decides</h1>
-    <p class="footnote">Spencer Brimley · Python + pdftotext + QuickBooks Online + Baserow + Ollama · Sep to Nov 2026</p>
+    <p class="footnote">Spencer Brimley · Python + pdftotext + QuickBooks Online + Baserow + Ollama · Oct to Nov 2026</p>
 
     <div class="case panel">
       <h2>At a glance</h2>
       <ul>
         <li><strong>Problem:</strong> about 250 vendor bills a month arrived as PDFs and had to be checked against their purchase orders before they went into QuickBooks.</li>
-        <li><strong>What I built:</strong> a Python tool that ran every morning on an office PC. It read each bill, entered the bills that reconciled in QuickBooks, and put every price or quantity difference into a Bill Discrepancies table I worked through.</li>
+        <li><strong>What I built:</strong> a Python tool that ran every morning on the purchasing PC. It read each bill, entered the bills that reconciled in QuickBooks, and put every price or quantity difference into a Bill Discrepancies table I worked through.</li>
         <li><strong>The rule:</strong> the model reads; code decides. A small local model answered narrow questions about the text, code checked every answer, and anything that failed went to a person instead of being guessed.</li>
         <li><strong>Results:</strong> 294 bills and credits entered between 9 October and 11 November 2026, and 95 discrepancy lines logged on 70 bills between 9 and 28 October 2026.</li>
         <li><strong>Status:</strong> write-up only. The code was written on company time, so the employer may own it and there is no repository.</li>
@@ -56,7 +56,7 @@
     stop than guess.</p>
 
     <h2>What I built</h2>
-    <p>A separate Python tool that ran every morning on an office PC from Task Scheduler. It pulled the
+    <p>A separate Python tool that ran every morning on the purchasing PC from Task Scheduler. It pulled the
     last 30 days of bill emails from Outlook, refreshed its copy of our QuickBooks bills and POs, and read
     each PDF. A bill whose lines added up to its printed total was entered in QuickBooks, or matched to the
     credit already there. Each price or quantity that differed from the PO went into a Bill Discrepancies
@@ -95,7 +95,7 @@
 
     <h2>Results</h2>
     <ul>
-      <li><strong>In daily use.</strong> From 9 October to 11 November 2026 the tool entered 294 vendor
+      <li><strong>Daily runs.</strong> From 9 October to 11 November 2026 the tool entered 294 vendor
         bills and credits in QuickBooks: 146 in the first batch on 9 October, then 148 from the unattended
         daily run (128 bills and 20 credits). It covered the four vendors I had written readers for. Bills
         from other vendors went to a person.</li>
