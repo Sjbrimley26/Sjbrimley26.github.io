@@ -72,8 +72,13 @@
     <ol>
       <li><strong>I started small.</strong> The first version (August 2022) was a task board on Vikunja,
         an open-source task manager, to track orders that used to live on paper. At that stage it was
-        mostly a CRM and project tracker. Once the process was clear I rebuilt it as a proper database
-        on Baserow.</li>
+        mostly a CRM and project tracker. It ran on servers I set up in the office: three old office PCs
+        rebuilt as Debian servers in a Docker Swarm with GlusterFS shared storage, also running
+        PostgreSQL, Paperless-ngx for documents, Seafile for file sync, Uptime Kuma for monitoring and
+        changedetection.io to watch competitor prices. Once the process was clear I rebuilt it as a
+        proper database on Baserow. Baserow did not run well on Swarm, the office internet was slow and
+        the owner often worked away from the office, so I moved the system to a cloud server and shut
+        the Swarm down by April 2024.</li>
       <li><strong>Discovery and requirements.</strong> I mapped the work before building anything. I followed an order from estimate
         to invoice, purchase order, receiving, production, delivery or will-call, and payment, and noted
         who touched it at each step.</li>
