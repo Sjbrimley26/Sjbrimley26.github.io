@@ -69,7 +69,7 @@
     <ol>
       <li><strong>Read the spec.</strong> The description is parsed into width, height, style, core
         (hollow or solid), thickness, fire rating, and how it hangs (single, pair, bypass, pocket). Size
-        comes from the description, never from a separate width or height column that someone may have
+        is read from the written size, never from separate width or height columns that someone may have
         filled in differently. Words that do not change the slab, such as boring, prep or a magnetic
         catch, are noted and ignored.</li>
       <li><strong>Match, do not compose.</strong> The spec is compared with every door in the catalog. A
@@ -127,10 +127,6 @@
     </ul>
     <p>I wrote these down because the alternative is a silent wrong answer. A blank SKU on a worksheet row
     shows up in the review list. A confidently wrong one does not.</p>
-
-    <h2>What I'd change</h2>
-    <p>The rules lived in code and in tests, so the owner could rule on a wording but could not read the
-    rule it changed. I would keep the rulings in a table he can open, and generate the tests from it.</p>
 
     <h2>Links</h2>
     <ul>
