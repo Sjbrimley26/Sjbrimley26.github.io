@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>relay: a local-first job runner where code checks every answer · Spencer Brimley</title>
+  <meta name="description" content="A Python job runner that tries local models first, checks every answer with plain code, escalates a rejected answer with the reason, and reaches a cloud model only after a person approves.">
+  <link rel="canonical" href="https://spencerbrimley.com/relay.html">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="relay: a local-first job runner where code checks every answer">
+  <meta property="og:description" content="A Python job runner that tries local models first, checks every answer with plain code, escalates a rejected answer with the reason, and reaches a cloud model only after a person approves.">
+  <meta property="og:url" content="https://spencerbrimley.com/relay.html">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0b1c28">
+  <link rel="stylesheet" href="assets/style.css">
+  <script data-goatcounter="https://sjbrimley26.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/">Spencer Brimley</a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/#about">About</a>
+      <a href="/#experience">Experience</a>
+      <a href="/#projects">Projects</a>
+    </nav>
+  </header>
+  <main id="main" class="page">
+    <h1 class="page-title">relay: a local-first job runner where code checks every answer</h1>
+    <p class="footnote">Spencer Brimley · Python, SQLite, llama.cpp · Oct to Nov 2026</p>
+
+    <div class="case panel">
+      <h2>At a glance</h2>
+      <ul>
+        <li><strong>Problem:</strong> I wanted small jobs that need a language model (extract fields from a listing, summarize a long document, narrate a server health check) to run on my own GPU, and I did not want to trust a model's answer just because it sounded right.</li>
+        <li><strong>What I built:</strong> a job queue and a ladder of local models. Every task has a plain-code <code>check()</code>. A rejected answer moves to the next model along with the reason it was rejected.</li>
+        <li><strong>The rule:</strong> the model reads, code decides. A cloud model is reached only after I approve a specific job.</li>
+        <li><strong>Results:</strong> from 18 October to 16 November 2026, 56 of 65 jobs on three tasks finished on the local GPU with no cloud call. Nothing was sent to a cloud model.</li>
+        <li><strong>Status:</strong> running on my own hardware. No public repository yet.</li>
+      </ul>
+    </div>
+
+    <figure class="shot">
+      <img src="img/diagram-relay.svg" width="1200" height="600" alt="Diagram: small apps put jobs in a SQLite queue. A worker tries local model rungs from the top down, and each answer goes through a plain-code check. A job ends done, deferred, or pending approval. A cloud model is reached only after a person approves. A GPU lease and an overnight window control when a model that needs the one GPU may load.">
+      <figcaption>How a job moves through relay. No hostnames or addresses.</figcaption>
+    </figure>
+
+    <h2>The problem</h2>
+    <p>I run a few small language-model jobs at home on one 4 GB GPU. Three of them are described here:
+    pulling structured fields out of public rental listings, writing a summary of a long document with
+    its claims checked against the source, and narrating a morning health check of my servers.</p>
+    <p>A small model is fast and free, and it is wrong some of the time. It also breaks in ways that have
+    nothing to do with the answer: the machine is off, the model is not loaded, another job holds the GPU.
+    I wanted one place that handled all of that, so each job could stay a short piece of code.</p>
+
+    <h2>What I built</h2>
+    <p>About 10,600 lines of Python with 340 test functions. The pieces:</p>
+    <ul>
+      <li><strong>Small apps</strong> that find items and put them in a SQLite queue. They never call a
+        model. Each item has a unique key, so adding the same item twice does nothing.</li>
+      <li><strong>A worker</strong> that runs every 10 minutes under a lock. It claims queued jobs and
+        walks the ladder of local models.</li>
+      <li><strong>A task module</strong> for each kind of job: how to ask the model, a <code>check()</code>
+        for its answer, and what to do when the job is done.</li>
+      <li><strong>A GPU lease</strong> and an overnight window, because one card can hold one model at a time.</li>
+      <li><strong>An approval step</strong> for the cloud, from the command line or from a chat message to
+        an agent.</li>
+    </ul>
+
+    <h2>How it decides</h2>
+    <ol>
+      <li><strong>Start at the top rung.</strong> Before calling a model, the worker asks it whether it is
+        up, with a 5-second timeout. A rung that does not answer is skipped, not waited on.</li>
+      <li><strong>Check in code.</strong> Every answer goes through the task's <code>check()</code>. For the
+        listing task it requires strict JSON, values from an allowed list, and a rent that matches the
+        listing's own price field. For the health-check task, every quote the model gives as evidence must
+        appear word for word in the raw output, no flagged item may be dropped, and no unflagged item may
+        be reported.</li>
+      <li><strong>Reject with a reason.</strong> A rejected answer goes down to the next rung with the
+        reason attached, so the next model knows what to fix.</li>
+      <li><strong>Defer, do not fail.</strong> If no model answered at all, because the host is off or the
+        needed model is not loaded, the job is deferred and retried when a rung comes back. It is not
+        counted as an attempt. A failure means a model answered and the check refused it.</li>
+      <li><strong>Cloud only on approval.</strong> The worker only ever uses local rungs. If every local
+        answer is rejected and the task allows the cloud, the job waits as pending approval. A test fails
+        if the worker ever touches a cloud host. Some tasks forbid the cloud outright, and the summary task
+        refuses it for any document in a private folder.</li>
+      <li><strong>Share the GPU.</strong> Anything that moves the card first takes a lease. A model that
+        needs a swap waits for a window from 01:00 to 06:00 local time, then the card goes back to its
+        resting model. A lease belongs to a process that is alive, so a crash cannot leave the card locked.</li>
+    </ol>
+    <p>Moving a job between states is a single update that only works from a legal state. If the cron worker
+    and a person approving from the command line reach the same job together, one of them gets an error and
+    the job is never run twice.</p>
+    <p>The model narrates, and code gates. On the health check, if the model fails or its quotes do not
+    check out, the message that goes out is built by code from the check's own evidence and is titled
+    "no model summary".</p>
+
+    <h2>Results</h2>
+    <ul>
+      <li><strong>Local, no cloud calls.</strong> From 18 October to 16 November 2026 the queue held 65 jobs
+        for the three tasks: 46 listing extractions, 18 health checks and 1 summary. 56 finished, 5
+        failed, and 4 were waiting for the overnight window when I counted. No job went to a cloud model.</li>
+      <li><strong>The checker caught invented evidence.</strong> Two of the five health-check failures were
+        the model quoting evidence that was not in the check's output. The other three were infrastructure
+        errors (the GPU memory did not free twice, and the card did not hand back cleanly once).</li>
+      <li><strong>An outage is not a loss.</strong> In a scripted test with the model host off, three
+        jobs were deferred with no attempts used. After a stand-in model came up, the next pass
+        finished all three.</li>
+      <li><strong>A model for the job.</strong> On a test of 23 listings, one run each, the top local model
+        got 21 right at about 8 seconds a listing. That is a small sample, and I say so.</li>
+    </ul>
+    <p>These counts come from the queue database and the task notes, read on 16 November 2026. Jobs from
+    my own job-search tooling are left out of this page on purpose.</p>
+
+    <h2>What went wrong</h2>
+    <p>Until 12 November, a model router that refused a call or lost a loaded model was recorded as a model
+    error. The job went to failed, and the app that adds jobs skipped any item it already had a row for, so
+    nobody looked at it again. An outage quietly cost items. The fix was to treat "no model answered" as a
+    different thing from "the model answered badly", which is the deferred state above. I capped how many
+    times a refusal can defer a job at eight, so waiting cannot become a new way to fail.</p>
+
+    <h2>Links</h2>
+    <ul>
+      <li>The same rule in a business setting: <a href="bill-checker.html">Bill checker</a></li>
+      <li>The hardware it runs on: <a href="homelab.html">Homelab</a></li>
+      <li>Tests of local models on this GPU: <a href="https://github.com/Sjbrimley26/small-gpu-bench">small-gpu-bench</a></li>
+      <li>No repository yet.</li>
+    </ul>
+  </main>
+  <footer class="site-footer">
+    <p class="links"><a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a> <a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="/Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+    <p>© 2026 Spencer Brimley</p>
+  </footer>
+</body>
+</html>

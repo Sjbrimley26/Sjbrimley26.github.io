@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600" role="img" aria-labelledby="t d">
+  <title id="t">How a job moves through relay</title>
+  <desc id="d">Small apps put jobs in a SQLite queue. A worker that runs every 10 minutes tries local model rungs from the top down. Every answer goes through a plain-code check. A passing answer finishes the job. A failing answer moves to the next rung along with the reason. If no model answers, the job is deferred and retried later. If every local rung fails and the task allows cloud, the job waits for a person to approve it. A GPU lease and an overnight batch window decide when a model that needs the one GPU may be loaded.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1a2e"/><stop offset="1" stop-color="#08111f"/>
+    </linearGradient>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#b8d4ee"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Source Sans 3", sans-serif; fill: #e6eef8; font-size: 17px; }
+    .h { font-family: "Playfair Display", serif; font-weight: 600; font-size: 22px; fill: #b8d4ee; }
+    .title { font-family: "Playfair Display", serif; font-weight: 600; font-size: 26px; fill: #e6eef8; }
+    .s { font-size: 15px; fill: #9db4cc; }
+    .frame { fill: #0f2036; stroke: #5d7fa3; stroke-width: 1.5; }
+    .box { fill: #16304f; stroke: #b8d4ee; stroke-width: 1.5; }
+    .ext { fill: #0b1626; stroke: #7e99b8; stroke-width: 1.5; stroke-dasharray: 6 4; }
+    .ln { stroke: #b8d4ee; stroke-width: 2; fill: none; }
+    .c { text-anchor: middle; }
+  </style>
+  <rect width="1200" height="600" fill="url(#bg)"/>
+  <text x="30" y="38" class="title">relay: a local-first job runner</text>
+
+  <!-- connectors -->
+  <path class="ln" marker-end="url(#ah)" d="M215 190 H260"/>
+  <path class="ln" marker-end="url(#ah)" d="M440 190 H480"/>
+  <path class="ln" marker-end="url(#ah)" d="M860 150 H910"/>
+  <path class="ln" marker-end="url(#ah)" d="M860 235 H910"/>
+  <path class="ln" marker-end="url(#ah)" d="M860 370 H910"/>
+  <path class="ln" marker-end="url(#ah)" d="M1010 405 V430"/>
+
+  <rect class="box" x="30" y="150" width="185" height="80" rx="8"/>
+  <text x="122" y="184" class="c">Small apps</text>
+  <text x="122" y="208" class="c s">find items, enqueue</text>
+
+  <rect class="box" x="260" y="150" width="180" height="80" rx="8"/>
+  <text x="350" y="184" class="c">SQLite queue</text>
+  <text x="350" y="208" class="c s">one row per item</text>
+
+  <rect class="frame" x="480" y="70" width="380" height="330" rx="10"/>
+  <text x="500" y="100" class="h">Worker, every 10 minutes</text>
+  <rect class="box" x="500" y="120" width="340" height="72" rx="8"/>
+  <text x="520" y="150">Rung 1: best local model</text>
+  <text x="520" y="174" class="s">answer goes through check(), plain code</text>
+  <rect class="box" x="500" y="205" width="340" height="72" rx="8"/>
+  <text x="520" y="235">Rung 2: slower or thinking seat</text>
+  <text x="520" y="259" class="s">gets the reason rung 1 was rejected</text>
+  <rect class="box" x="500" y="290" width="340" height="72" rx="8"/>
+  <text x="520" y="320">Rung 3 and on: other local seats</text>
+  <text x="520" y="344" class="s">a seat that is down is skipped</text>
+  <path class="ln" marker-end="url(#ah)" d="M670 192 V205"/>
+  <path class="ln" marker-end="url(#ah)" d="M670 277 V290"/>
+
+  <rect class="box" x="910" y="110" width="260" height="70" rx="8"/>
+  <text x="1040" y="142" class="c">Done</text>
+  <text x="1040" y="165" class="c s">check passed; notify</text>
+
+  <rect class="box" x="910" y="195" width="260" height="110" rx="8"/>
+  <text x="1040" y="227" class="c">Deferred, not failed</text>
+  <text x="1040" y="251" class="c s">no model answered (host off,</text>
+  <text x="1040" y="271" class="c s">seat not loaded); retried when</text>
+  <text x="1040" y="291" class="c s">a rung is back</text>
+
+  <rect class="box" x="910" y="335" width="260" height="70" rx="8"/>
+  <text x="1040" y="367" class="c">Pending approval</text>
+  <text x="1040" y="390" class="c s">local answers all rejected</text>
+  <rect class="ext" x="910" y="430" width="260" height="70" rx="8"/>
+  <text x="1040" y="462" class="c">Cloud model</text>
+  <text x="1040" y="485" class="c s">only after a person approves</text>
+
+  <rect class="frame" x="30" y="430" width="830" height="120" rx="10"/>
+  <text x="50" y="460" class="h">One GPU, shared</text>
+  <text x="50" y="490">A lease says who holds the card. A model that needs a swap waits for the overnight window.</text>
+  <text x="50" y="516" class="s">Window 01:00 to 06:00 local time. The card goes back to its resting model afterward.</text>
+  <path class="ln" d="M670 362 V430" stroke-dasharray="6 4"/>
+</svg>
