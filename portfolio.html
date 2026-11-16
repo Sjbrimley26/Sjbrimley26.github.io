@@ -2,104 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portfolio — Spencer Brimley</title>
-  <meta name="description" content="Projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, business systems such as a vendor bill checker, local AI experiments on a 4 GB GPU, and earlier code.">
-  <link rel="canonical" href="https://spencerbrimley.com/portfolio.html">
-  <link rel="icon" href="/favicon.ico">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Spencer Brimley">
-  <meta property="og:title" content="Portfolio — Spencer Brimley">
-  <meta property="og:description" content="Projects by Spencer Brimley: an ERP built on Baserow and n8n for a small distributor, business systems such as a vendor bill checker, local AI experiments on a 4 GB GPU, and earlier code.">
-  <meta property="og:url" content="https://spencerbrimley.com/portfolio.html">
-  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap">
-  <link rel="stylesheet" href="assets/style.css">
+  <title>Projects · Spencer Brimley</title>
+  <link rel="canonical" href="https://spencerbrimley.com/#projects">
+  <meta http-equiv="refresh" content="0; url=/#projects">
 </head>
 <body>
-  <a class="skip" href="#main">Skip to content</a>
-  <header class="site-header">
-    <div class="wrap">
-      <a class="brand" href="index.html">Spencer Brimley</a>
-      <nav class="topnav" aria-label="Main">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="portfolio.html" aria-current="page">Portfolio</a>
-        <a href="contact.html">Contact</a>
-      </nav>
-    </div>
-  </header>
-  <main id="main" class="page">
-    <h1 class="page-title">Portfolio</h1>
-
-    <h2 class="work-heading">Featured</h2>
-    <div class="grid">
-      <div class="card card-wide">
-        <img class="thumb tall" src="img/kanban.png" alt="Kanban board of invoices in Baserow, grouped by status, from a demo copy with fake data" width="1280" height="720">
-        <div class="body">
-          <h3>The ERP I built and ran a distributor on <span class="flag">Case study · owner moved back to paper in 2026</span></h3>
-          <p>I was General Manager of an 11-person door and trim distributor and built its ERP on Baserow, n8n and QuickBooks Online. It started in August 2022 as a CRM and project tracker. Automation began with n8n in May 2025, and by the end it had 31 tables and 29 workflows. Every employee used it, and three were daily power users. The owner moved the business back to paper in 2026, and staff stopped using it in early November. From May 2025 to November 2026 its n8n workflows handled about 46,000 business events (QuickBooks changes, order and production updates, incoming calls), plus background checks every five minutes.</p>
-          <ul class="tags"><li>Baserow</li><li>n8n</li><li>Python</li><li>QuickBooks Online</li></ul>
-          <div class="links"><a href="erp-case-study.html">Read the case study →</a></div>
-        </div>
-      </div>
-    </div>
-
-    <h2 class="work-heading">Business systems</h2>
-    <div class="grid">
-      <div class="card">
-        <img class="thumb" src="img/bill-discrepancies.png" alt="Bill Discrepancies table in Baserow, one row per price or quantity difference, from a demo copy with fake vendor names" width="1280" height="720">
-        <div class="body">
-          <h3>Bill checker <span class="flag">Write-up only</span></h3>
-          <p>A Python tool that ran every morning: it read vendor bills against their POs, entered the ones that reconciled in QuickBooks, and logged every price or quantity difference for me to work through. A local model answered narrow questions, and code checked every answer.</p>
-          <ul class="tags"><li>Python</li><li>Local LLMs</li><li>QuickBooks Online</li><li>Baserow</li></ul>
-          <div class="links"><a href="bill-checker.html">Write-up →</a></div>
-        </div>
-      </div>
-    </div>
-
-    <h2 class="work-heading">Infrastructure and AI</h2>
-    <div class="grid">
-      <div class="card">
-        <div class="thumb plate" aria-hidden="true">4<span class="unit">GB</span></div>
-        <div class="body">
-          <h3>small-gpu-bench</h3>
-          <p>Tests of real LLM tasks (redaction, document audit, tool selection, judge calibration) on a 4&nbsp;GB Pascal GPU. The repo has a stdlib-only test harness, a pattern where a checker decides when to escalate, and the source for every number.</p>
-          <ul class="tags"><li>Python</li><li>Ollama</li><li>Local LLMs</li></ul>
-          <div class="links"><a href="https://github.com/Sjbrimley26/small-gpu-bench">Code</a></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="thumb plate" aria-hidden="true">P→L</div>
-        <div class="body">
-          <h3>prompt-tune</h3>
-          <p>A cloud model rewrites a local model's prompt using only an aggregate report, so it never sees a record of the private data. The repo includes the gateway, the leak tests and the results of the first real runs.</p>
-          <ul class="tags"><li>Python</li><li>Local LLMs</li><li>Privacy tests</li></ul>
-          <div class="links"><a href="https://github.com/Sjbrimley26/prompt-tune">Code</a></div>
-        </div>
-      </div>
-    </div>
-
-    <h2 class="work-heading">Earlier work (2017-2021)</h2>
-    <ul class="earlier">
-      <li><strong>Shop.Doormanstan</strong>: the store's online catalog and its Lambda, Express and DynamoDB backend. The site closed with the original business. Code: <a href="https://github.com/Sjbrimley26/doorman-jamb-backend">backend</a>, <a href="https://github.com/Sjbrimley26/jambCalculator">jamb calculator</a>.</li>
-      <li><strong>Fair Rentals</strong>: a 2017 Chingu project by a 4-person remote team, built with MERN, GraphQL and Auth0. <a href="https://github.com/chingu-voyage3/fair-rentals">Code</a></li>
-      <li><strong>Google Sheets CRUD</strong>: a small library that used Google Sheets as a backend with no login, from when the shop database was a spreadsheet and a nightly script. <a href="https://github.com/Sjbrimley26/sheets-crud">Code</a></li>
-      <li><strong>Godot games</strong>: a hex-grid tactics game in GDScript. <a href="https://github.com/Sjbrimley26/Hex-SRPG">Hex-SRPG</a></li>
-      <li><strong>redRouge</strong>: my first roguelike, in plain JavaScript and canvas. <a href="https://github.com/Sjbrimley26/redRouge">Code</a></li>
-    </ul>
-    <p class="footnote">More on <a href="https://github.com/Sjbrimley26">GitHub</a>.</p>
-  </main>
-  <footer class="site-footer">
-    <div class="wrap">
-      <p>Spencer Brimley · <a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a></p>
-      <p class="links"><a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
-      <p>© 2026 Spencer Brimley</p>
-    </div>
-  </footer>
+  <p>This page moved: <a href="/#projects">Projects · Spencer Brimley</a>.</p>
 </body>
 </html>
