@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKU resolver: select the door, never compose the code · Spencer Brimley</title>
+  <meta name="description" content="A Python tool that turned shop-floor door descriptions into catalog SKUs. It only ever selected a door the catalog already had, and it said so when it was unsure.">
+  <link rel="canonical" href="https://spencerbrimley.com/sku-resolver.html">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="SKU resolver: select the door, never compose the code">
+  <meta property="og:description" content="A Python tool that turned shop-floor door descriptions into catalog SKUs. It only ever selected a door the catalog already had, and it said so when it was unsure.">
+  <meta property="og:url" content="https://spencerbrimley.com/sku-resolver.html">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0b1c28">
+  <link rel="stylesheet" href="assets/style.css">
+  <script data-goatcounter="https://sjbrimley26.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/">Spencer Brimley</a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/#about">About</a>
+      <a href="/#experience">Experience</a>
+      <a href="/#projects">Projects</a>
+    </nav>
+  </header>
+  <main id="main" class="page">
+    <h1 class="page-title">SKU resolver: select the door, never compose the code</h1>
+    <p class="footnote">Spencer Brimley · Python, standard library only · Oct 2026</p>
+
+    <div class="case panel">
+      <h2>At a glance</h2>
+      <ul>
+        <li><strong>Problem:</strong> staff wrote doors the way they speak, and every purchase order, worksheet and invoice needed the catalog SKU.</li>
+        <li><strong>What I built:</strong> a Python package that reads a description into a spec (size, style, core, thickness, fire rating, how it hangs) and matches the spec against the doors the catalog already carries.</li>
+        <li><strong>The rule:</strong> a SKU is never composed from text. It is only selected from the catalog, so the tool cannot invent a code that does not exist.</li>
+        <li><strong>Results:</strong> checked against what was actually billed, 438 of 448 worksheet doors and 754 of 769 purchase orders agreed, measured in October 2026.</li>
+        <li><strong>Status:</strong> write-up only. The code was written on company time, so the employer may own it and there is no repository.</li>
+      </ul>
+    </div>
+
+    <h2>The problem</h2>
+    <p>A catalog names a door with a code. Nobody writes the code on a worksheet or a purchase order. People
+    write things like "2-6 6-8 2-panel HC" or "3-0 8-0 1-pnl 1 3/4 20-min", and each of those has to become
+    exactly one SKU, every time, for every person.</p>
+    <p>The same door was written a dozen ways. Prices, reorders and vendor matching all depended on
+    someone remembering which way meant which door. A wrong SKU is worse than a blank one, because it
+    shows up on an invoice months later.</p>
+
+    <h2>What I built</h2>
+    <p>A Python package of about 5,400 lines, with 115 unit tests, using only the standard library. It
+    runs in three places:</p>
+    <ul>
+      <li>the purchase-order workflow, where a PO line becomes a SKU for QuickBooks;</li>
+      <li>the worksheet pass, which wrote one row per worksheet line, with its SKU, into the ERP every few
+        minutes;</li>
+      <li>the price lookup, when someone searched by description instead of by code.</li>
+    </ul>
+    <p>It is read-only. It never wrote to the ERP, QuickBooks or the purchasing database itself. Other jobs
+    took its answer and did the writing.</p>
+
+    <h2>How it decides</h2>
+    <ol>
+      <li><strong>Read the spec.</strong> The description is parsed into width, height, style, core
+        (hollow or solid), thickness, fire rating, and how it hangs (single, pair, bypass, pocket). Size
+        comes from the description, never from a separate width or height column that someone may have
+        filled in differently. Words that do not change the slab, such as boring, prep or a magnetic
+        catch, are noted and ignored.</li>
+      <li><strong>Match, do not compose.</strong> The spec is compared with every door in the catalog. A
+        match needs every written word to be accounted for: it either selected the door, or it is a known
+        word that does not change the slab.</li>
+      <li><strong>Say what happened.</strong> One of three answers, below.</li>
+    </ol>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Answer</th><th>Meaning</th><th>What the next job may do</th></tr></thead>
+      <tbody>
+        <tr><td><code>resolved</code></td><td>Exactly one catalog door fits and every word was understood.</td><td>Use the SKU.</td></tr>
+        <tr><td><code>needs_review</code></td><td>Several doors fit, or one fits with words left over.</td><td>Show the candidates to a person.</td></tr>
+        <tr><td><code>unresolved</code></td><td>Nothing fits, the size or style could not be read, or the customer supplied the door.</td><td>Leave the SKU blank.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>A leftover word is the only sign that the writer meant a different door, so it is treated as a
+    failure to be asked about. The middle answer exists because most real mistakes are not "no idea", they
+    are "two plausible doors". Folding that into either of the other answers would throw away the shortlist
+    and make a person start over.</p>
+    <p>On a worksheet, a line that needed review was still written, with the SKU blank and the source marked
+    <code>needs_review</code>, so the work list stayed complete.</p>
+
+    <h2>Who made the rules</h2>
+    <p>Some of the rules are facts about what the company sells, not facts about the catalog. A shaker door
+    cannot be solid-core. When no thickness is written, a door is 1 3/8 inch, except fiberglass and
+    20-minute fire doors, which are 1 3/4. A few styles were discontinued, so they are reported, not
+    resolved. The owner had to make those calls.</p>
+    <p>So the tool produced a review sheet for every wording it had seen but could not place, with the
+    evidence next to each (which invoice, quantity and price, and which other doors fit). The owner filled
+    in a decision column, a script folded the answers in, and every ruling became a new unit test. The
+    sheets were kept with their dates and whether they had been applied or held, which gave an audit trail
+    of who decided what.</p>
+
+    <h2>Results</h2>
+    <p>Unit tests only prove the code agrees with itself, so the scored runs used what the company
+    actually billed and ordered as the answer key.</p>
+    <ul>
+      <li><strong>Worksheets against invoices.</strong> 438 of 448 doors agreed, and 378 of 390 workbooks
+        reconciled completely. Measured 14 October 2026.</li>
+      <li><strong>Purchase orders.</strong> 754 of 769 agreed line for line. Measured 14 October 2026.</li>
+      <li><strong>Pre-hung doors, against billed invoice lines.</strong> 620 of 645 lines (96 percent) and
+        79 of 95 sheets (83 percent). Measured 16 October 2026.</li>
+    </ul>
+    <p>These are the recorded results from those dates. I have not re-run them for this page, and I cannot
+    show the data they ran on.</p>
+
+    <h2>What it will not do</h2>
+    <ul>
+      <li>It never makes up a SKU. A door the company planned to carry reports its planned code and is
+        never marked resolved.</li>
+      <li>It does not price anything. It says which door. Price books say what it costs.</li>
+      <li>It does not resolve hardware, sidelites or discontinued styles. Those end with a person.</li>
+    </ul>
+    <p>I wrote these down because the alternative is a silent wrong answer. A blank SKU on a worksheet row
+    shows up in the review list. A confidently wrong one does not.</p>
+
+    <h2>What I'd change</h2>
+    <p>The rules lived in code and in tests, so the owner could rule on a wording but could not read the
+    rule it changed. I would keep the rulings in a table he can open, and generate the tests from it.</p>
+
+    <h2>Links</h2>
+    <ul>
+      <li>The system it fed: <a href="erp-case-study.html">ERP case study</a></li>
+      <li>The sibling tool that used it: <a href="bill-checker.html">Bill checker</a></li>
+      <li>No repository. This is a write-up only: the code was written on company time, so the employer may
+        own it.</li>
+    </ul>
+  </main>
+  <footer class="site-footer">
+    <p class="links"><a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a> <a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="/Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+    <p>© 2026 Spencer Brimley</p>
+  </footer>
+</body>
+</html>
