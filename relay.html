@@ -40,7 +40,7 @@
         <li><strong>Problem:</strong> I wanted small jobs that need a language model (extract fields from a listing, summarize a long document, narrate a server health check) to run on my own GPU, and I did not want to trust a model's answer just because it sounded right.</li>
         <li><strong>What I built:</strong> a job queue and a ladder of local models. Every task has a plain-code <code>check()</code>. A rejected answer moves to the next model along with the reason it was rejected.</li>
         <li><strong>The rule:</strong> the model reads, code decides. A cloud model is reached only after I approve a specific job.</li>
-        <li><strong>Results:</strong> from 18 October to 16 November 2026, 56 of 65 jobs on three tasks finished on the local GPU with no cloud call. Nothing was sent to a cloud model.</li>
+        <li><strong>Results:</strong> from 18 October to 16 November 2026, 56 of 65 jobs on three tasks finished on the local GPU with no cloud call. Nothing was sent to a cloud model. On a test of 100 invented listings the check never rejected a correct answer, but it catches only a minority of the wrong ones.</li>
         <li><strong>Status:</strong> running on my own hardware. No public repository yet.</li>
       </ul>
     </div>
@@ -112,9 +112,42 @@
       <li><strong>An outage is not a loss.</strong> In a scripted test with the model host off, three
         jobs were deferred with no attempts used. After a stand-in model came up, the next pass
         finished all three.</li>
-      <li><strong>A model for the job.</strong> On a test of 23 listings, one run each, the top local model
-        got 21 right at about 8 seconds a listing. That is a small sample, and I say so.</li>
+      <li><strong>Five fault drills pass.</strong> I injected five faults into a test copy: a model host
+        that dies mid-call, the GPU held by another process, a job that arrives outside the overnight
+        window, a cloud approval that is denied, and malformed model output. Each one ended in its documented
+        state, with no job lost and no job run twice. I also switched off the code that tells an outage from
+        a bad answer, and the first drill failed, so the drills are not empty.</li>
     </ul>
+    <h3>What the check catches</h3>
+    <p>I wanted a number for "the model reads, code decides". I re-scored recorded answers from a public test
+    of 100 invented rental listings, where the right answer is known for every field. For each of eight
+    model setups I counted the listings with a wrong rent, bedroom count, bathroom count, kind or pet
+    policy, once if I accept every answer and once if I accept only the answers that pass the check.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model setup</th><th>Wrong, accept everything</th><th>Wrong, check passed</th><th>Sent up a rung</th><th>Correct but rejected</th></tr></thead>
+      <tbody>
+        <tr><td>granite3.3 2B</td><td>72</td><td>52</td><td>20</td><td>0</td></tr>
+        <tr><td>granite4 3B</td><td>40</td><td>25</td><td>15</td><td>0</td></tr>
+        <tr><td>ling3-tiny</td><td>40</td><td>32</td><td>8</td><td>0</td></tr>
+        <tr><td>FrogNano 4B</td><td>31</td><td>28</td><td>3</td><td>0</td></tr>
+        <tr><td>gemma4 e4b, thinking off</td><td>8</td><td>8</td><td>0</td><td>0</td></tr>
+        <tr><td>bolt e4b, thinking off</td><td>7</td><td>7</td><td>0</td><td>0</td></tr>
+        <tr><td>gemma4 e4b, thinking on</td><td>3</td><td>3</td><td>0</td><td>0</td></tr>
+        <tr><td>bolt e4b, thinking on</td><td>3</td><td>3</td><td>0</td><td>0</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>The check never rejected a correct answer. On the four weakest setups it caught 8 to 20 wrong answers
+    that would otherwise have been accepted, and the rest got through. Most of what got through was the pet
+    policy: 133 of the 169 wrong values that passed. The check compares rent, bedrooms and bathrooms with the
+    listing's own fields, and it cannot tell whether "dogs ok" is right, because that means reading the
+    text. So the check is a floor that costs nothing, not a verifier, and the real protection on a task
+    like this is picking a model that reads well. A ladder that starts with the weakest model and climbs on
+    a failed check still ended with 55 wrong listings out of 100, against 8 for the best of those models
+    used alone.</p>
+    <p>This is one fixture, one run per setup, on invented listings. Counts are listings, not fields.</p>
+
     <p>These counts come from the queue database and the task notes, read on 16 November 2026. Jobs from
     my own job-search tooling are left out of this page on purpose.</p>
 
