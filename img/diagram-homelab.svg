@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 720" role="img" aria-labelledby="t d">
+  <title id="t">How the homelab fits together</title>
+  <desc id="d">One Proxmox host runs three virtual machines: a main Fedora server VM and two gaming VMs. The main VM runs 15 Docker Compose services in four groups: Data (2), Automation and apps (4), AI / LLM (4), and Network, access and monitoring (5). One 4 GB GPU is moved between the VMs by a script on the host. Borg backups to cloud object storage run every 2 hours in the daytime, with Postgres dumps after each and daily config backups. Tailscale gives remote access. A rathole tunnel publishes chosen services through a small cloud VPS without opening home ports. Slack and Gotify carry notifications, and an AI agent works tickets from the backlog board.</desc>
+<defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d1a2e"/><stop offset="1" stop-color="#08111f"/>
+    </linearGradient>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#b8d4ee"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: "Source Sans 3", sans-serif; fill: #e6eef8; font-size: 17px; }
+    .h { font-family: "Playfair Display", serif; font-weight: 600; font-size: 22px; fill: #b8d4ee; }
+    .title { font-family: "Playfair Display", serif; font-weight: 600; font-size: 26px; fill: #e6eef8; }
+    .s { font-size: 17px; fill: #9db4cc; }
+    .frame { fill: #0f2036; stroke: #5d7fa3; stroke-width: 1.5; }
+    .box { fill: #16304f; stroke: #b8d4ee; stroke-width: 1.5; }
+    .ext { fill: #0b1626; stroke: #7e99b8; stroke-width: 1.5; stroke-dasharray: 6 4; }
+    .ln { stroke: #b8d4ee; stroke-width: 2; fill: none; }
+    .c { text-anchor: middle; }
+  </style>
+  <rect width="1200" height="720" fill="url(#bg)"/>
+  <text x="30" y="36" class="title">Homelab</text>
+
+  <!-- connectors (drawn first) -->
+  <path class="ln" marker-end="url(#ah)" d="M850 86 H810"/>
+  <path class="ln" marker-end="url(#ah)" d="M790 210 H850"/>
+  <path class="ln" marker-end="url(#ah)" d="M790 332 H850"/>
+  <path class="ln" marker-end="url(#ah)" d="M810 465 H850"/>
+  <path class="ln" marker-start="url(#ah)" marker-end="url(#ah)" d="M810 598 H850"/>
+
+  <!-- Proxmox host -->
+  <rect class="frame" x="30" y="56" width="780" height="580" rx="10"/>
+  <text x="50" y="86" class="h">Proxmox host · 3 VMs</text>
+
+  <rect class="frame" x="50" y="100" width="740" height="326" rx="10"/>
+  <text x="70" y="128" class="h" style="font-size:21px">Main server VM (Fedora) · 15 services</text>
+  <rect class="box" x="65" y="140" width="350" height="120" rx="8"/>
+  <text x="81" y="170" class="h" style="font-size:21px">Data · 2</text>
+  <text x="81" y="200" class="s">PostgreSQL</text>
+  <text x="81" y="224" class="s">Datasette</text>
+<rect class="box" x="425" y="140" width="350" height="120" rx="8"/>
+  <text x="441" y="170" class="h" style="font-size:21px">Automation and apps · 4</text>
+  <text x="441" y="200" class="s">n8n, Miniflux</text>
+  <text x="441" y="224" class="s">RSS-Bridge, Mealie</text>
+<rect class="box" x="65" y="275" width="350" height="120" rx="8"/>
+  <text x="81" y="305" class="h" style="font-size:21px">AI / LLM · 4</text>
+  <text x="81" y="335" class="s">llama.cpp router, embeddings</text>
+  <text x="81" y="359" class="s">rag-service, Qdrant</text>
+<rect class="box" x="425" y="275" width="350" height="120" rx="8"/>
+  <text x="441" y="305" class="h" style="font-size:21px">Network, access, monitoring · 5</text>
+  <text x="441" y="335" class="s">AdGuard Home, Nginx Proxy Manager</text>
+  <text x="441" y="359" class="s">rathole, Homer, Gotify</text>
+
+  <rect class="box" x="50" y="470" width="220" height="80" rx="8"/>
+  <text x="160" y="516" class="c">Gaming VM</text>
+  <rect class="box" x="560" y="470" width="220" height="80" rx="8"/>
+  <text x="670" y="516" class="c">Gaming VM</text>
+  <rect class="box" x="300" y="470" width="230" height="80" rx="8" style="stroke:#e6eef8"/>
+  <text x="415" y="504" class="c">GPU</text>
+  <text x="415" y="528" class="c s">GTX 1050 Ti, 4 GB</text>
+  <text x="415" y="582" class="s c">moved between VMs</text>
+  <text x="415" y="604" class="s c">by a host script</text>
+
+  <path class="ln" stroke-dasharray="7 5" marker-end="url(#ah)" d="M415 470 V426"/>
+  <path class="ln" stroke-dasharray="7 5" marker-end="url(#ah)" d="M300 510 H270"/>
+  <path class="ln" stroke-dasharray="7 5" marker-end="url(#ah)" d="M530 510 H560"/>
+
+  <!-- outside the host -->
+  <rect class="ext" x="850" y="56" width="330" height="60" rx="8"/>
+  <text x="1015" y="92" class="c">Tailscale (remote access)</text>
+
+  <rect class="ext" x="850" y="150" width="330" height="120" rx="8"/>
+  <text x="1015" y="180" class="c">Small cloud VPS</text>
+  <text x="1015" y="206" class="s c">reached by the rathole tunnel</text>
+  <text x="1015" y="230" class="s c">publishes chosen services,</text>
+  <text x="1015" y="252" class="s c">no open home ports</text>
+
+  <rect class="ext" x="850" y="300" width="330" height="64" rx="8"/>
+  <text x="1015" y="338" class="c">Slack / Gotify notices</text>
+
+  <rect class="ext" x="850" y="400" width="330" height="130" rx="8"/>
+  <text x="1015" y="430" class="c">Cloud object storage</text>
+  <text x="1015" y="458" class="s c">Borg every 2 h, daytime</text>
+  <text x="1015" y="482" class="s c">Postgres dumps after each</text>
+  <text x="1015" y="506" class="s c">daily config backups</text>
+
+  <rect class="ext" x="850" y="560" width="330" height="76" rx="8"/>
+  <text x="1015" y="590" class="c">Hermes Agent</text>
+  <text x="1015" y="614" class="s c">works tickets from the backlog board</text>
+
+  <text x="30" y="700" class="s">Homelab: one Proxmox host, three VMs, 15 Compose services</text>
+</svg>

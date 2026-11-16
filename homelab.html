@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Homelab: a small server setup run like a small IT shop · Spencer Brimley</title>
+  <meta name="description" content="One Proxmox host, three VMs and 15 Docker Compose services, run like a small IT shop: scheduled off-site backups, a timed disaster-recovery rebuild, one GPU shared between VMs by script, and a ticket board an AI agent works from.">
+  <link rel="canonical" href="https://spencerbrimley.com/homelab.html">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="Homelab: a small server setup run like a small IT shop">
+  <meta property="og:description" content="One Proxmox host, three VMs and 15 Docker Compose services, run like a small IT shop: scheduled off-site backups, a timed disaster-recovery rebuild, one GPU shared between VMs by script, and a ticket board an AI agent works from.">
+  <meta property="og:url" content="https://spencerbrimley.com/homelab.html">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0b1c28">
+  <link rel="stylesheet" href="assets/style.css">
+  <script data-goatcounter="https://sjbrimley26.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/">Spencer Brimley</a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/#about">About</a>
+      <a href="/#experience">Experience</a>
+      <a href="/#projects">Projects</a>
+    </nav>
+  </header>
+  <main id="main" class="page">
+    <h1 class="page-title">Homelab: a small server setup run like a small IT shop</h1>
+    <p class="footnote">Spencer Brimley · Proxmox, Docker Compose, Borg, Tailscale, Gotify, Slack · since 2022</p>
+
+    <div class="case panel">
+      <h2>At a glance</h2>
+      <ul>
+        <li><strong>What it is:</strong> one Proxmox host with three VMs. The main VM runs 15 services with Docker Compose.</li>
+        <li><strong>The standard I hold it to:</strong> it has to survive a bad disk and tell me when something breaks.</li>
+        <li><strong>Backups:</strong> Borg to cloud object storage every 2 hours in the daytime, a PostgreSQL dump after each, and daily config backups.</li>
+        <li><strong>Tested:</strong> on 2026-11-16 I rebuilt the main VM from the cloud copies alone in 3 hours 10 minutes. 13 of 15 services came back.</li>
+        <li><strong>Status:</strong> running now. No public repository; the configs hold secrets.</li>
+      </ul>
+    </div>
+
+    <figure class="shot">
+      <img src="img/diagram-homelab.svg" width="1200" height="720" alt="Diagram: one Proxmox host runs three VMs. The main Fedora VM runs 15 Compose services in four groups. One GPU moves between VMs by script. Borg backups go to cloud object storage, Tailscale gives remote access, and a tunnel through a small cloud server publishes chosen services.">
+      <figcaption>How the pieces fit together. No addresses or hostnames.</figcaption>
+    </figure>
+
+    <h2>The problem</h2>
+    <p>I wanted to run my own services at home and treat them like something a company depends on. That
+    means they have to survive a bad disk and tell me when something breaks. I was a general manager and
+    ran IT for a small distributor, so those were already the questions I asked about every system there.</p>
+
+    <h2>What I built</h2>
+    <p>One Proxmox host runs three VMs: the main Fedora server VM and two gaming VMs. The main VM runs 15
+    containers with Docker Compose, in four groups.</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Area</th><th>Count</th><th>What they do</th></tr></thead>
+      <tbody>
+        <tr><td>Data</td><td>2</td><td>PostgreSQL 15, one shared server for several apps; Datasette for read-only browsing of SQLite datasets</td></tr>
+        <tr><td>Automation and apps</td><td>4</td><td>n8n (the same tool as the ERP), Miniflux, RSS-Bridge, Mealie</td></tr>
+        <tr><td>AI</td><td>4</td><td>A llama.cpp router that serves several local models on one 4 GB GPU; an embedding server; rag-service; Qdrant</td></tr>
+        <tr><td>Network, access, monitoring</td><td>5</td><td>AdGuard Home, Nginx Proxy Manager, rathole, Homer, Gotify</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p>Remote access is Tailscale. Nginx Proxy Manager handles the reverse proxy and TLS for the local
+    services. For the few services I want reachable from outside, rathole publishes them through a small
+    cloud server, so no port is open on my home network.</p>
+    <p>rag-service is hybrid search (dense vectors plus BM25) over my notes, scripts and docs. AI agents
+    reach it through an MCP API, and Qdrant stores the vectors.</p>
+    <p>Each project keeps its documentation as a knowledge bundle in a <code>kb</code> folder, written so I
+    can follow it later. Open work is not kept there. It goes on a backlog board.</p>
+
+    <h2>How it decides</h2>
+    <p><strong>Who holds the GPU.</strong> There is one GTX 1050 Ti for three VMs, and only one VM can use
+    it at a time. A script on the Proxmox host moves the card between VMs. When it moves, the main VM
+    reconciles its containers at boot. If the card is present, it uses the GPU compose files. If not, it
+    uses the CPU-only files and the GPU containers stay stopped. I ran the full hand-off on 2026-10-26: the
+    main VM shut down cleanly in 111 seconds, the other VM came up with the card, and the boot reconcile
+    finished in 6 minutes 13 seconds with no container stuck restarting.</p>
+    <p><strong>Who gets told, and how.</strong> Gotify sends one-way notices. Slack is for anything that
+    needs me to answer. I keep them apart so a push on my phone means "read this" and a Slack message
+    means "reply to this".</p>
+    <p><strong>Which tickets an agent may take.</strong> The backlog board has six columns: doing, next,
+    blocked, backlog, triage, done. Each card has a Why and a Done when. Each also carries a priority, a
+    risk level (safe, approval, destructive), an effort size and a tier that says who should do it, from me
+    to a small or large AI model. A destructive card means back up first. An approval card means ask me
+    first. An AI agent (Hermes Agent, running as a service with a Slack gateway) reads the board, picks up
+    cards it is allowed to take, moves them with one script so the log stays accurate, and writes down what
+    it did and how it checked it. It may not mark a card verified. That sign-off is mine.</p>
+
+    <h2>Results</h2>
+    <ul>
+      <li><strong>Scheduled backups.</strong> Docker volumes go to Borg every 2 hours from 08:00 to 20:00
+        UTC and copy to cloud object storage. A PostgreSQL dump runs 5 minutes after each. Three daily jobs
+        run between 09:15 and 09:45 UTC: the notification server, the storage pool and the config
+        files.</li>
+      <li><strong>Restore test, 2026-11-12.</strong> After adding the config backup (the first run was
+        9,551 files in 23 seconds), I ran a dry-run extract of the archive (12,636 entries), restored three
+        files and compared them byte for byte with the live copies, and ran a repository check. All three
+        passed.</li>
+      <li><strong>Disaster-recovery drill, 2026-11-16.</strong> I rebuilt the main VM from nothing but the
+        cloud copies, on an isolated network so the copy could not reach Slack, the tunnel or the LAN, while
+        the real VM kept running. It took 3 hours 10 minutes from a blank cloud image to working services.
+        13 of the 15 services came back and answered a health check. The tunnel stayed off on purpose, and
+        one service failed because its data was in no backup. Steps were timed: 68 GB downloaded in 18
+        minutes, 135,000 files extracted in 12 minutes, and all five database dumps restored with no
+        errors.</li>
+      <li><strong>Full-disk VM backup.</strong> The main VM also gets a Proxmox backup of its whole disk to
+        a second drive. Restoring it to a spare VM took about 30 minutes, with containers up about 10
+        minutes after that. The scheduled job stopped after its first run, so it is a ticket and I do not
+        call it nightly.</li>
+      <li><strong>The board.</strong> 201 cards, 106 done as of 2026-11-16.</li>
+    </ul>
+
+    <h2>What I'd change</h2>
+    <p>The drill found four real problems, which is what a drill is for. A backup job's cleanup had been
+    failing for weeks. Two of the cloud copies kept stale data and failed a repository check. The keys that
+    unlock the backups lived only on the machine they protect. A folder with my AI test results was in no
+    backup. Each is a ticket on the board, and I will add dates here as they close. I also have no real
+    monitoring beyond health checks and notices yet. That is on the board too.</p>
+
+    <h2>The 60-second version</h2>
+    <p>I run a Proxmox host with three VMs and 15 containers on the main one. Backups go to cloud object
+    storage on a schedule, and I rebuilt the main VM from those copies alone in 3 hours 10 minutes. One 4 GB
+    GPU moves between VMs by script, and the main VM switches its containers between GPU and CPU files.
+    Gotify sends notices, and Slack is for things that need a reply. Remote access is Tailscale, and I
+    publish a few services through a tunnel with no open home ports. Work is tracked as tickets on a kanban
+    board, and an AI agent takes the safe ones.</p>
+
+    <h2>Links</h2>
+    <p>Upstream projects named on this page: Proxmox VE, Docker Compose, BorgBackup, Tailscale, rathole,
+    Nginx Proxy Manager, AdGuard Home, Gotify, n8n, llama.cpp, Qdrant, Hermes Agent, Homer. I have no
+    repository of my own for this yet. The related public work is
+    <a href="https://github.com/Sjbrimley26/small-gpu-bench">small-gpu-bench</a>.</p>
+  </main>
+  <footer class="site-footer">
+    <p class="links"><a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a> <a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="/Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+    <p>© 2026 Spencer Brimley</p>
+  </footer>
+</body>
+</html>

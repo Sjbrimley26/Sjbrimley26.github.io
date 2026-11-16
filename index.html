@@ -78,7 +78,7 @@
         including what I'd do differently.</p>
         <p>I didn't learn n8n, Baserow and Python from a course. I learned them because backorders
         weren't being passed on to customers and bills were slipping through. The homelab behind my
-        projects grew the same way: about twenty services on Linux, PostgreSQL, backups, VPNs, reverse
+        projects grew the same way: 15 services on Linux, PostgreSQL, backups, VPNs, reverse
         proxies, and a local LLM bench on a 4&nbsp;GB GPU. For AI work I run local models on private
         data and let code check what they return.</p>
         <p>Before the distributor I processed loans and ran a fraud-and-eligibility QC team for an
@@ -199,11 +199,23 @@
           </li>
 
           <li class="entry">
+            <img class="thumb" src="img/diagram-homelab.svg" alt="" loading="lazy">
+            <div>
+              <h3><a class="stretch" href="homelab.html">Homelab <span class="arrow">↗</span></a>
+                <span class="badge">Write-up</span></h3>
+              <p>One Proxmox host, three VMs and 15 Compose services, run like a small IT shop. I rebuilt
+              the main VM from the off-site backups alone in 3 hours 10 minutes, and one GPU moves between
+              VMs by script.</p>
+              <ul class="tags"><li>Proxmox</li><li>Docker</li><li>Borg</li><li>Linux</li></ul>
+            </div>
+          </li>
+
+          <li class="entry">
             <div class="thumb plate" aria-hidden="true">4&nbsp;GB</div>
             <div>
               <h3><a class="stretch" href="https://github.com/Sjbrimley26/small-gpu-bench">small-gpu-bench <span class="arrow">↗</span></a></h3>
-              <p>Tests of real LLM tasks (redaction, document audit, tool selection, judge calibration)
-              on a 4&nbsp;GB Pascal GPU. It includes a stdlib-only test harness, a pattern where a checker
+              <p>Tests of real LLM tasks (redaction, document audit, tool selection, judge calibration,
+              text-to-SQL, rental-listing extraction) on a 4&nbsp;GB Pascal GPU. It includes a stdlib-only test harness, a pattern where a checker
               decides when to escalate, and the source for every number.</p>
               <ul class="tags"><li>Python</li><li>Ollama</li><li>Local LLMs</li></ul>
             </div>
