@@ -88,7 +88,7 @@ h1, h2, h3 { font-family: var(--serif); color: var(--text-strong); font-weight: 
 }
 
 .intro h1 {
-  font-size: clamp(2.4rem, 5vw, 3.4rem);
+  font-size: clamp(2rem, 4.2vw, 3rem);
   margin: 0;
   letter-spacing: -0.01em;
 }
@@ -473,15 +473,22 @@ figure.shot figcaption {
   color: var(--text-strong);
 }
 
+.nameplate { display: flex; align-items: center; gap: 20px; }
+
 .avatar {
+  flex: none;
   display: block;
-  width: 88px;
-  height: 88px;
-  margin: 0 0 22px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--accent);
   box-shadow: 0 0 0 5px var(--accent-soft);
+}
+
+@media (max-width: 420px) {
+  .nameplate { gap: 14px; }
+  .avatar { width: 64px; height: 64px; }
 }
 
 .entry li a {
@@ -527,4 +534,18 @@ figure.shot figcaption {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
+}
+
+/* shorter laptop screens: tighten the sidebar so the links at the bottom stay on screen */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .intro { padding: 56px 0; }
+  .sections { margin-top: 32px; }
+  .sections a { padding: 7px 0; }
+  .content { padding-top: 56px; }
+}
+
+/* very short windows: let the sidebar scroll away instead of clipping it */
+@media (min-width: 1024px) and (max-height: 620px) {
+  .intro { position: static; height: auto; align-self: start; justify-content: flex-start; }
+  .reach { margin-top: 40px; }
 }
