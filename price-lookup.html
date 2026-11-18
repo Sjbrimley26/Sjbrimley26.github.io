@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Price lookup: code finds the price, the model only reads · Spencer Brimley</title>
+  <meta name="description" content="A Python price lookup over 36 vendor price books, built so that code found and computed every price and a small local model only read a page. Tested on 36 questions; never came into regular use.">
+  <link rel="canonical" href="https://spencerbrimley.com/price-lookup.html">
+  <link rel="icon" href="/favicon.ico?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Spencer Brimley">
+  <meta property="og:title" content="Price lookup: code finds the price, the model only reads">
+  <meta property="og:description" content="A Python price lookup over 36 vendor price books. Code found and computed every price; a small local model only read one page when code could not.">
+  <meta property="og:url" content="https://spencerbrimley.com/price-lookup.html">
+  <meta property="og:image" content="https://spencerbrimley.com/assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0b1c28">
+  <link rel="stylesheet" href="assets/style.css">
+  <script data-goatcounter="https://sjbrimley26.goatcounter.com/count"
+          async src="//gc.zgo.at/count.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="/">Spencer Brimley</a>
+    <nav class="topnav" aria-label="Main">
+      <a href="/#about">About</a>
+      <a href="/#experience">Experience</a>
+      <a href="/#projects">Projects</a>
+    </nav>
+  </header>
+  <main id="main" class="page">
+    <h1 class="page-title">Price lookup: code finds the price, the model only reads</h1>
+    <p class="footnote">Spencer Brimley · Python + PDF word positions + Ollama (Granite 4 Micro-H) · Oct 2026</p>
+
+    <div class="case panel">
+      <h2>At a glance</h2>
+      <ul>
+        <li><strong>Problem:</strong> staff asked for vendor prices, by part number or by description, and the prices sat in 36 PDF price books.</li>
+        <li><strong>What I built:</strong> a Python lookup over those books, with a screen in the ERP in front of it. Code found the row and did every calculation. A small local model read one page only when code could not find the answer.</li>
+        <li><strong>The rule:</strong> the model reads; code decides. Anything the books did not answer was refused, not guessed.</li>
+        <li><strong>Results:</strong> 35 of 36 test questions answered correctly and the last one flagged, scored by code. These are regression tests, not a held-out test (details below).</li>
+        <li><strong>Status:</strong> write-up only. The ERP screen was deployed on 19 October 2026, but the business went back to paper before it came into regular use, so there are no usage numbers. The code was written on company time, so the employer may own it and there is no repository.</li>
+      </ul>
+    </div>
+
+    <h2>The problem</h2>
+    <p>Our vendors publish their prices as PDF price books. The books are tables: a part number, a
+    description or a size, and one or more prices. Someone who needed a price opened the right book and
+    searched for the part. That is slow when you have the part number and slower when you only have a
+    description such as a door type and size.</p>
+    <p>A wrong price is worse than a slow one, so I wanted a lookup that would rather refuse than guess.</p>
+
+    <h2>What I built</h2>
+    <p>The lookup ran on the purchasing PC, which has no GPU and 16 GB of RAM. In October 2026 I built a
+    corpus from the 36 price books in scope: 1,250 pages with prices and 21,401 price records. A screen in
+    the ERP asked a small Python service for an answer.</p>
+    <p>A question went through a list of routes, and the first route that could answer won:</p>
+    <ol>
+      <li><strong>Refuse (code).</strong> If the question is about something the books cannot answer, such as what we paid
+        last time or a vendor that is out of scope, the lookup said so instead of returning a neighbouring price.</li>
+      <li><strong>Part number (code).</strong> A part number went through our cross-reference table, or straight to its
+        record in a book.</li>
+      <li><strong>Style name (code).</strong> A product family name returned the codes in that family.</li>
+      <li><strong>Stock (code).</strong> "Is this stocked?" was answered from a stock mark printed in the book. I read the
+        mark by its position on the page.</li>
+      <li><strong>Policy page (code, with the model as a reader).</strong> A question about lead times or ordering went to the
+        page that discusses it, and no price was asserted from that route.</li>
+      <li><strong>Description (code, with the model as a reader).</strong> A description was matched to one page by keyword
+        search. Code then filtered that page's rows by size, after turning "3-0" or a foot mark into inches, and
+        the model read the few rows left. Code did every calculation.</li>
+    </ol>
+    <p>The ERP screen used only the routes that need no model. When a question fell through, it pointed to
+    the likely pages and never showed a price written by a model. The two routes that used a model ran on the purchasing PC, where Granite 4 Micro-H, a small
+    IBM model, ran through Ollama on the CPU.</p>
+    <p>A code often prints more than one price. In the corpus, 7,154 of the 21,401 records print more than
+    one, and 1,021 of those print two different kinds of price, such as a list price and a net price. The
+    kind is read from the page's own header band when the corpus is built. Someone could ask for a kind
+    ("the net price of ..."), and that column was answered first. With no ask, the lookup answered the
+    best-ranked kind and still showed the others, so nothing was hidden.</p>
+
+    <h2>Results</h2>
+    <ul>
+      <li><strong>Retrieval, 5 to 8 October 2026.</strong> On 17 descriptive questions (n = 17, a small sample),
+        keyword search put the right catalog item first 13 times and embedding search 8 times.</li>
+      <li><strong>Labelled columns.</strong> On 9 test questions, the same small model went from 5 to 9 correct after code
+        labeled each price column on the page. Before that, every failure was the model taking the figure from
+        the wrong column.</li>
+      <li><strong>The reviewed question set, 8 October 2026.</strong> I reviewed 29 questions and wrote the right answer for
+        each. The tool answered 28 correctly. The 29th was flagged because the question's own premise was
+        wrong. Code did the scoring: every figure I had stated had to appear in the answer, and out-of-scope
+        questions had to be refused.</li>
+      <li><strong>The full set.</strong> Adding three stock-status and four which-price questions made 36. The tool
+        answered 35 correctly and one was flagged, the same one.</li>
+      <li><strong>What these numbers are.</strong> They are regression tests. I corrected the tool while I wrote the
+        questions, so the tool was tuned against them, and no question was held out. They show that the
+        fixes hold, not how it would do on a new set.</li>
+    </ul>
+
+    <h2>What went wrong</h2>
+    <ul>
+      <li><strong>The text layer paired the wrong price.</strong> My first extraction used pdftotext's layout mode.
+        Where a record spans several lines, it shifts the rows, so a code was paired with the next record's price.
+        I found it when I reviewed the first set and three of the first ten answers were wrong. Reading
+        word positions instead of the text layer reproduced all four corrections I had made. Every
+        retrieval number I had measured before the fix was void, and I discarded them.</li>
+      <li><strong>The model was not the failure.</strong> The first failures looked like model errors. The real cause was that the
+        extraction threw away which column each figure came from. Once code labeled the columns, the same model
+        got 9 of 9.</li>
+      <li><strong>A row without its description was refused.</strong> The model correctly refused to price a bare code and price,
+        because nothing said what the code was. The refusal was right and the context was wrong, so the
+        model never saw a row without its description after that.</li>
+      <li><strong>A policy question got prices.</strong> A question about a lead time was answered with price rows, because
+        a price table's header literally read "factory lead time". That is why the policy page route exists and
+        asserts no price.</li>
+      <li><strong>One page, not three.</strong> With three pages in front of it, the model answered from the wrong one while
+        two better pages went unread. Retrieving a single page fixed it.</li>
+    </ul>
+
+    <h2>A known limit</h2>
+    <p>When two items of the same size sit on one page and the book prints no description beside each code,
+    size cannot tell them apart, and the lookup could return the wrong one of the two. The books carry the
+    names beside the product pictures, not in the text. I left it as a limit and did not paper over it.</p>
+
+    <h2>The 60-second version</h2>
+    <div class="panel">
+      <p>Our vendors' prices were in 36 PDF price books. I built a Python lookup over them. Code found the
+      row, turned sizes into inches, picked the right price column and did every calculation. A small local
+      model read one page only when a description did not match a code, and the lookup refused
+      anything the books could not answer. It answered 35 of 36 test questions correctly, with one flagged. Those
+      were regression tests, not a held-out set. The first extraction paired codes with the wrong prices, and
+      finding that taught me to check the extraction before the model. The ERP screen was deployed on 19 October
+      2026, but the business went back to paper before it came into regular use.</p>
+    </div>
+
+    <h2>Links</h2>
+    <ul>
+      <li>The tool that checked bills against purchase orders: <a href="bill-checker.html">Bill checker</a></li>
+      <li>The system it ran in: <a href="erp-case-study.html">ERP case study</a></li>
+      <li>No repository. This is a write-up only: the code was written on company time, so the employer may
+        own it.</li>
+    </ul>
+  </main>
+  <footer class="site-footer">
+    <p class="links"><a href="mailto:sjbrimley26@live.com">sjbrimley26@live.com</a> <a href="https://github.com/Sjbrimley26">GitHub</a> <a href="https://www.linkedin.com/in/spencer-brimley-026673154/">LinkedIn</a> <a href="/Spencer-Brimley-Resume.pdf">Résumé (PDF)</a></p>
+    <p>© 2026 Spencer Brimley</p>
+  </footer>
+</body>
+</html>
